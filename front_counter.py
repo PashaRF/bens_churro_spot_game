@@ -1,16 +1,50 @@
-'''temporary front counter for testing'''
+"""Front counter"""
 import random
 import time
 
 
 def display_menu(game_state):
     '''Display the menu for the Front Counter station'''
-    return "Front Counter Menu recieved display request: "
+    menu_text = (
+        "\n=== BEN'S CHURRO SPOT - FRONT COUNTER ===\n"
+        "1. View waiting customer list\n"
+        "2. Check for new customers\n"
+        "3. Go to Next Station / Back to Main Menu"
+    )
+    print(menu_text)
+    return menu_text
 
 
 def handle_input(choice, game_state):
     '''Handle input specific to the Front Counter station'''
-    return "Front Counter received input: "
+    # Extract the FrontCounter instance from your central game state
+    counter = game_state.get('front_counter')
+    
+    if not counter:
+        print("[Error] Front Counter instance not found in game state.")
+        return None
+
+    if choice == "1":
+        counter.view_waiting_customers()
+        return "viewed_customers"
+        
+    elif choice == "2":
+        # Generates the ticket, prints order details, and adds customer to waiting list
+        new_ticket = counter.check_for_new_customers()
+        
+        # If your game loop needs to instantly pass this ticket to the order queue:
+        if 'order_tickets' in game_state:
+            game_state['order_tickets'].append(new_ticket)
+            
+        return new_ticket  # Returns the ticket object so main.py can use it if needed
+        
+    elif choice == "3":
+        print("\nLeaving Front Counter...")
+        return "exit"
+        
+    else:
+        print("Invalid choice. Please select 1, 2, or 3.")
+        return "invalid"
 
 
 # --- Configuration Constants ---
@@ -34,7 +68,7 @@ class Ticket:
         self.order_time = time.time()   # Stores the exact time the order was taken
 
     def __str__(self):
-        details = f"Ticket ({self.num_churros} {self.shape} Churros):\n"
+        details = f"\n--- TICKET DETAILS ---\nShape: {self.shape}\nAmount: {self.num_churros} Churro(s)\n"
         for i, churro in enumerate(self.churro_details, 1):
             details += f"  - Churro #{i}: Sauce: {churro['sauce']}, Topping: {churro['topping']}\n"
         return details
