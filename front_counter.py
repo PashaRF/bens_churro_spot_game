@@ -19,7 +19,7 @@ def handle_input(choice, game_state):
     '''Handle input specific to the Front Counter station'''
     # Extract the FrontCounter instance from your central game state
     counter = game_state.get('front_counter')
-    
+
     if not counter:
         print("[Error] Front Counter instance not found in game state.")
         return None
@@ -27,21 +27,21 @@ def handle_input(choice, game_state):
     if choice == "4":
         counter.view_waiting_customers()
         return "viewed_customers"
-        
+
     elif choice == "5":
         # Generates the ticket, prints order details, and adds customer to waiting list
         new_ticket = counter.check_for_new_customers()
-        
+
         # Matches your exact 'tickets' list initialization key
         if 'tickets' in game_state:
             game_state['tickets'].append(new_ticket)
-            
+
         return new_ticket  # Returns the ticket object
-        
+
     elif choice == "6":
         print("\nLeaving Front Counter...")
         return "exit"
-        
+
     else:
         print("Invalid choice. Please select 4, 5, or 6.")
         return "invalid"

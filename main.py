@@ -174,18 +174,29 @@ def main():
             else:
                 print("\n--- Active Tickets ---")
                 for i, ticket in enumerate(game_state['tickets']):
-                    print(f"Ticket {i+1}: {ticket['name']}")
+                    # Check if it's a Ticket object or a background thread dictionary
+                    if hasattr(ticket, 'shape'):
+                        print(
+                            f"Ticket {i+1}: {ticket.num_churros} {ticket.shape} Churros")
+                    else:
+                        print(
+                            f"Ticket {i+1}: {ticket['name']} (Waiting at Door)")
 
                 t_choice = input(
                     "Enter ticket number to view details (or press enter to cancel): ")
                 if t_choice.isdigit() and 1 <= int(t_choice) <= len(game_state['tickets']):
                     selected = game_state['tickets'][int(t_choice)-1]
                     print(f"\n[ Ticket Details ]")
-                    print(f"Name: {selected['name']}")
-                    print(f"Order: {selected['order']}")
+
+                    # Print dynamically based on data structure type
+                    if hasattr(selected, 'shape'):
+                        # This safely calls the __str__ definition inside front_counter.py
+                        print(selected)
+                    else:
+                        print(f"Name: {selected['name']}")
+                        print(f"Order: {selected['order']}")
                 else:
                     print("Returning to menu.")
-
         elif choice == 'Q':
             print("Packing up for the day! Goodbye.")
             # We can put save logic here later
