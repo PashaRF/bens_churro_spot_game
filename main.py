@@ -19,22 +19,27 @@ game_state = {
     "character_name": "",
     "current_station": "Front Counter",
     "tickets": [],
-    "start_time": 0
+    "start_time": 0,
+
+    # ADD THIS LINE TO FIX THE ERROR:
+    "front_counter": front_counter.FrontCounter()
 }
 
 stations = [
-    "Front Counter", 
-    "Pastry Station", 
-    "Fry Station", 
-    "Topping Station", 
+    "Front Counter",
+    "Pastry Station",
+    "Fry Station",
+    "Topping Station",
     "Pay Counter"
 ]
 
 # --- Helper Functions ---
 
+
 def check_save_file():
     """Checks if a mock save file exists."""
     return os.path.exists("savegame.txt")
+
 
 def start_new_game():
     """Initializes a new game and prints the intro."""
@@ -49,12 +54,14 @@ def start_new_game():
 
     input("\nPress ENTER to start your shift...")
 
+
 def load_game():
     """Mock function to load an old save."""
     print("Loading previous save data...")
     # Add your actual file reading logic here
-    game_state["character_name"] = "Returning Employee" 
+    game_state["character_name"] = "Returning Employee"
     print("Save loaded successfully!\n")
+
 
 def format_time(seconds):
     """Formats elapsed seconds into MM:SS format."""
@@ -63,6 +70,7 @@ def format_time(seconds):
     return f"{mins:02d}:{secs:02d}"
 
 # --- Background Threads ---
+
 
 def customer_timer():
     """Runs in the background, adding a customer every 45-120 seconds."""
@@ -84,16 +92,18 @@ def customer_timer():
         game_state["tickets"].append(new_ticket)
 
         # Print bell sound (the \r clears the current input line momentarily to print this)
-        print("\n\r[🛎️ DING! A new customer has arrived at the Front Counter!] \n> ", end="")
+        print(
+            "\n\r[🛎️ DING! A new customer has arrived at the Front Counter!] \n> ", end="")
 
 # --- Main Game Loop ---
+
 
 def main():
     '''Main function to run the game loop.'''
     # 1. Boot up and Save Check
     if check_save_file():
         choice = input("Old save found! Would you like to (C)ontinue "
-        "or start a (N)ew game? [C/N]: ").strip().upper()
+                       "or start a (N)ew game? [C/N]: ").strip().upper()
         if choice == 'C':
             load_game()
         else:
@@ -147,7 +157,8 @@ def main():
                 if station != game_state["current_station"]:
                     print(f"- {station}")
 
-            new_station = input("Type the name of the station to move to: ").strip().title()
+            new_station = input(
+                "Type the name of the station to move to: ").strip().title()
             if new_station in stations and new_station != game_state["current_station"]:
                 game_state["current_station"] = new_station
                 print(f"Walking to {new_station}...")
@@ -165,7 +176,8 @@ def main():
                 for i, ticket in enumerate(game_state['tickets']):
                     print(f"Ticket {i+1}: {ticket['name']}")
 
-                t_choice = input("Enter ticket number to view details (or press enter to cancel): ")
+                t_choice = input(
+                    "Enter ticket number to view details (or press enter to cancel): ")
                 if t_choice.isdigit() and 1 <= int(t_choice) <= len(game_state['tickets']):
                     selected = game_state['tickets'][int(t_choice)-1]
                     print(f"\n[ Ticket Details ]")
@@ -191,6 +203,7 @@ def main():
                 topping_station.handle_input(choice, game_state)
             elif game_state["current_station"] == "Pay Counter":
                 pay_counter.handle_input(choice, game_state)
+
 
 if __name__ == "__main__":
     main()
