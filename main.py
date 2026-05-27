@@ -22,7 +22,8 @@ game_state = {
     "start_time": 0,
 
     # ADD THIS LINE TO FIX THE ERROR:
-    "front_counter": front_counter.FrontCounter()
+    "front_counter": front_counter.FrontCounter(),
+    "fry_station": fry_station.FryStation()
 }
 
 stations = [
