@@ -83,7 +83,7 @@ def customer_timer():
         # Set a short timer for the first customer, standard timer for the rest
         if is_first_customer:
             wait_time = random.randint(5, 10)
-            is_first_customer = False  # Turn off the flag for all future loops
+            is_first_customer = False
         else:
             wait_time = random.randint(45, 120)
 
@@ -93,16 +93,20 @@ def customer_timer():
                 return
             time.sleep(1)
 
+        # --- THE FIX ---
+        # Pull a random name directly from the front_counter module's pool
+        arrival_name = random.choice(front_counter.NAMES_POOL)
+
         # Add customer and ring bell
         new_ticket = {
-            "name": f"Customer_{random.randint(100, 999)}",
+            "name": arrival_name,
             "order": "Pending Order details..."
         }
         game_state["tickets"].append(new_ticket)
 
-        # Print bell sound (the \r clears the current input line momentarily to print this)
+        # Print bell sound with their actual name!
         print(
-            "\n\r[🛎️ DING! A new customer has arrived at the Front Counter!] \n> ", end="")
+            f"\n\r[🛎️ DING! {arrival_name} just walked in the door!] \n> ", end="")
 # --- Main Game Loop ---
 
 
