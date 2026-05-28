@@ -51,31 +51,63 @@ def handle_input(choice, game_state):
         return None
 
     if choice == "4":
-        print("\n--- Select Churro Shape ---")
-        for idx, shape in enumerate(SHAPES, 1):
-            print(f"{idx}. {shape}")
+        # --- THE FIX: Menu Loop ---
+        while True:
+            print("\n--- Select Churro Shape ---")
+            for idx, shape in enumerate(SHAPES, 1):
+                print(f"{idx}. {shape}")
+            print("T. Check Active Tickets")
+            print("C. Cancel and Go Back")
 
-        try:
-            shape_choice = int(input("Enter choice (1-3): "))
-            if 1 <= shape_choice <= len(SHAPES):
-                chosen_shape = SHAPES[shape_choice - 1]
+            shape_input = input("Enter choice: ").strip().upper()
 
-                print("\n--- Select Quantity ---")
-                num_churros = int(input("How many churros to cut? (1-6): "))
-
-                if 1 <= num_churros <= 6:
-                    # Pass to the class method to process
-                    station.cut_churros(chosen_shape, num_churros, game_state)
-                    return "cut_churros"
+            # Handle ticket checking request
+            if shape_input == "T":
+                tickets = game_state.get("tickets", [])
+                if not tickets:
+                    print("\nYou have no active tickets right now.")
                 else:
-                    print("Invalid amount! You can only cut between 1 and 6 churros at a time.")
-            else:
-                print("Invalid shape selection.")
+                    print("\n=== CURRENT ACTIVE TICKETS ===")
+                    for i, ticket in enumerate(tickets, 1):
+                        if hasattr(ticket, 'shape'):
+                            # Safely leverages the Ticket object's __str__ details
+                            print(f"\n[Ticket #{i}]" + str(ticket))
+                        else:
+                            print(
+                                f"\n[Ticket #{i}] Name: {ticket['name']} (Waiting at Door to order)")
+                    print("==============================")
+                continue  # Loops right back to the shape selection menu
 
-        except ValueError:
-            print("Invalid input typing. Please use numbers only.")
+            # Handle cancellation
+            if shape_input == "C":
+                print("\nReturning to Pastry Station main menu...")
+                return "canceled"
 
-        return "invalid"
+            # Process shape choice selection
+            try:
+                shape_choice = int(shape_input)
+                if 1 <= shape_choice <= len(SHAPES):
+                    chosen_shape = SHAPES[shape_choice - 1]
+
+                    print("\n--- Select Quantity ---")
+                    num_churros = int(
+                        input("How many churros to cut? (1-6): "))
+
+                    if 1 <= num_churros <= 6:
+                        # Pass to the class method to process
+                        station.cut_churros(
+                            chosen_shape, num_churros, game_state)
+                        return "cut_churros"
+                    else:
+                        print(
+                            "Invalid amount! You can only cut between 1 and 6 churros at a time.")
+                else:
+                    print(
+                        "Invalid shape selection. Please choose a number from the list.")
+
+            except ValueError:
+                print(
+                    "Invalid entry. Please enter a shape number, 'T' to view tickets, or 'C' to cancel.")
 
     elif choice == "5":
         # Check what is currently waiting for the fryer
