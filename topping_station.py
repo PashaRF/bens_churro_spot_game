@@ -70,14 +70,49 @@ def handle_input(choice, game_state):
             batch_choice = int(input("Select which batch to plate: ")) - 1
             if 0 <= batch_choice < len(fry_queue):
                 # Pull the batch from the fryer queue
-                new_plate = fry_queue.pop(batch_choice)
+                pulled_batch = fry_queue.pop(batch_choice)
 
-                # Initialize the churro_details list for the exact number of churros
-                new_plate["churro_details"] = [{"sauce": "None", "topping": "None"} for _ in range(new_plate["count"])]
+                # Check if there are active plates to add to
+                action = "1"
+                if station.active_plates:
+                    print("\n--- Plating Options ---")
+                    print("1. Create a NEW plate")
+                    print("2. Add to an EXISTING plate")
+                    action = input("Select option (1 or 2): ").strip()
 
-                # Add to our active workbench
-                station.active_plates.append(new_plate)
-                print(f"\n[🍽️] Successfully plated {new_plate['count']} {new_plate['shape']} churro(s)!")
+                if action == "2" and station.active_plates:
+                    station.display_active_plates()
+                    try:
+                        plate_idx = int(input("\nWhich plate do you want to add these to? ")) - 1
+                        if 0 <= plate_idx < len(station.active_plates):
+                            target_plate = station.active_plates[plate_idx]
+
+                            # Merge data
+                            target_plate["count"] += pulled_batch["count"]
+
+                            # Average out the cook scores for the final plate grade
+                            target_plate["side1_score"] = round((target_plate["side1_score"] + pulled_batch["side1_score"]) / 2, 1)
+                            target_plate["side2_score"] = round((target_plate["side2_score"] + pulled_batch["side2_score"]) / 2, 1)
+
+                            # Add the new blank churros to the details array
+                            target_plate["churro_details"].extend([{"sauce": "None", "topping": "None"} for _ in range(pulled_batch["count"])])
+
+                            print(f"\n[🍽️] Added {pulled_batch['count']} {pulled_batch['shape']} churro(s) to Plate #{plate_idx + 1}!")
+                        else:
+                            print("Invalid plate selection. Creating a new plate instead.")
+                            action = "1"
+                    except ValueError:
+                        print("Invalid input. Creating a new plate instead.")
+                        action = "1"
+
+                # If they chose 1, or if adding to an existing plate failed/was unavailable
+                if action == "1":
+                    # Initialize the churro_details list for the exact number of churros
+                    pulled_batch["churro_details"] = [{"sauce": "None", "topping": "None"} for _ in range(pulled_batch["count"])]
+                    # Add to our active workbench
+                    station.active_plates.append(pulled_batch)
+                    print(f"\n[🍽️] Successfully created a new plate with {pulled_batch['count']} {pulled_batch['shape']} churro(s)!")
+
             else:
                 print("Invalid batch selection.")
         except ValueError:
@@ -106,18 +141,9 @@ def handle_input(choice, game_state):
                     amt = input("Select amount (Light / Normal / Heavy): ").strip().title()
                     if not amt: amt = "Normal"
 
-                    # Ask which churro to apply it to (or all)
-                    c_choice = int(input(f"Apply to which Churro? (1-{target_plate['count']}, or 0 for ALL): "))
-
-                    if c_choice == 0:
-                        for churro in target_plate['churro_details']:
-                            churro['topping'] = selected_topping
-                        print(f"\n[✨] Added a {amt} amount of {selected_topping} to ALL churros on Plate #{p_choice + 1}.")
-                    elif 1 <= c_choice <= target_plate['count']:
-                        target_plate['churro_details'][c_choice - 1]['topping'] = selected_topping
-                        print(f"\n[✨] Added a {amt} amount of {selected_topping} to Churro #{c_choice}.")
-                    else:
-                        print("Invalid churro number.")
+                    for churro in target_plate['churro_details']:
+                        churro['topping'] = selected_topping
+                    print(f"\n[✨] Added a {amt} amount of {selected_topping} to churros on plate #{p_choice + 1}.")
                 else:
                     print("Invalid topping choice.")
             else:

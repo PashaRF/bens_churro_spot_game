@@ -54,11 +54,11 @@ class PayCounter:
 
         # 4. Waiting Time Score (Speed)
         elapsed_time = time.time() - ticket.order_time
-        # Perfect score if under 45 seconds, drops down gradually over 3 minutes
-        if elapsed_time <= 45:
+        # Perfect score if under 75 seconds, drops down gradually over 3 minutes
+        if elapsed_time <= 75:
             time_score = 100
         else:
-            time_score = max(0, 100 - int((elapsed_time - 45) / 1.5))
+            time_score = max(0, 100 - int((elapsed_time - 75) / 1.5))
 
         # Overall Average Score
         final_percentage = (dough_score + cook_score +
