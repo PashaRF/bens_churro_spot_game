@@ -129,27 +129,57 @@ def handle_input(choice, game_state):
             if 0 <= p_choice < len(station.active_plates):
                 target_plate = station.active_plates[p_choice]
 
-                print("\n--- Available Toppings ---")
-                for i, top in enumerate(TOPPINGS, 1):
-                    print(f"{i}. {top}")
+                # --- Menu Loop for Toppings & Ticket Checking ---
+                while True:
+                    print("\n--- Available Toppings ---")
+                    for i, top in enumerate(TOPPINGS, 1):
+                        print(f"{i}. {top}")
+                    print("T. Check Active Tickets")
+                    print("C. Cancel and Go Back")
 
-                t_choice = int(input("Select Topping: ")) - 1
-                if 0 <= t_choice < len(TOPPINGS):
-                    selected_topping = TOPPINGS[t_choice]
+                    t_input = input("Select Topping (or T/C): ").strip().upper()
 
-                    # Style input (Flavor/Immersion)
-                    amt = input("Select amount (Light / Normal / Heavy): ").strip().title()
-                    if not amt: amt = "Normal"
+                    # Handle ticket checking
+                    if t_input == "T":
+                        tickets = game_state.get("tickets", [])
+                        if not tickets:
+                            print("\nYou have no active tickets right now.")
+                        else:
+                            print("\n=== CURRENT ACTIVE TICKETS ===")
+                            for i, ticket in enumerate(tickets, 1):
+                                if hasattr(ticket, 'shape'):
+                                    print(f"\n[Ticket #{i}]" + str(ticket))
+                                else:
+                                    print(f"\n[Ticket #{i}] Name: {ticket['name']} (Waiting at Door)")
+                            print("==============================")
+                        continue  # Return to the topping list display
 
-                    for churro in target_plate['churro_details']:
-                        churro['topping'] = selected_topping
-                    print(f"\n[✨] Added a {amt} amount of {selected_topping} to churros on plate #{p_choice + 1}.")
-                else:
-                    print("Invalid topping choice.")
+                    # Handle cancel
+                    if t_input == "C":
+                        print("\nCanceling topping addition...")
+                        break
+
+                    # Handle numerical selection
+                    try:
+                        t_choice = int(t_input) - 1
+                        if 0 <= t_choice < len(TOPPINGS):
+                            selected_topping = TOPPINGS[t_choice]
+
+                            amt = input("Select amount (Light / Normal / Heavy): ").strip().title()
+                            if not amt: amt = "Normal"
+
+                            for churro in target_plate['churro_details']:
+                                churro['topping'] = selected_topping
+                            print(f"\n[✨] Added a {amt} amount of {selected_topping} to churros on plate #{p_choice + 1}.")
+                            break  # Break out of the loop since item was applied successfully
+                        else:
+                            print("Invalid topping choice.")
+                    except ValueError:
+                        print("Please enter a valid option (Number, T, or C).")
             else:
                 print("Invalid plate selection.")
         except ValueError:
-            print("Please enter valid numbers.")
+            print("Please enter valid numbers for plate selection.")
 
         return "added_topping"
 
@@ -162,36 +192,57 @@ def handle_input(choice, game_state):
             if 0 <= p_choice < len(station.active_plates):
                 target_plate = station.active_plates[p_choice]
                 
-                print("\n--- Available Sauces ---")
-                for i, sauce in enumerate(SAUCES, 1):
-                    print(f"{i}. {sauce}")
+                # --- Menu Loop for Sauces & Ticket Checking ---
+                while True:
+                    print("\n--- Available Sauces ---")
+                    for i, sauce in enumerate(SAUCES, 1):
+                        print(f"{i}. {sauce}")
+                    print("T. Check Active Tickets")
+                    print("C. Cancel and Go Back")
 
-                s_choice = int(input("Select Sauce: ")) - 1
-                if 0 <= s_choice < len(SAUCES):
-                    selected_sauce = SAUCES[s_choice]
+                    s_input = input("Select Sauce (or T/C): ").strip().upper()
 
-                    # Style input (Flavor/Immersion)
-                    style = input("Select style (Drizzled / On the Side): ").strip().title()
-                    if not style: style = "Drizzled"
+                    # Handle ticket checking
+                    if s_input == "T":
+                        tickets = game_state.get("tickets", [])
+                        if not tickets:
+                            print("\nYou have no active tickets right now.")
+                        else:
+                            print("\n=== CURRENT ACTIVE TICKETS ===")
+                            for i, ticket in enumerate(tickets, 1):
+                                if hasattr(ticket, 'shape'):
+                                    print(f"\n[Ticket #{i}]" + str(ticket))
+                                else:
+                                    print(f"\n[Ticket #{i}] Name: {ticket['name']} (Waiting at Door)")
+                            print("==============================")
+                        continue  # Return to the sauce list display
 
-                    # Ask which churro to apply it to (or all)
-                    c_choice = int(input(f"Apply to which Churro? (1-{target_plate['count']}, or 0 for ALL): "))
+                    # Handle cancel
+                    if s_input == "C":
+                        print("\nCanceling sauce addition...")
+                        break
 
-                    if c_choice == 0:
-                        for churro in target_plate['churro_details']:
-                            churro['sauce'] = selected_sauce
-                        print(f"\n[🍯] Added {selected_sauce} ({style}) to ALL churros on Plate #{p_choice + 1}.")
-                    elif 1 <= c_choice <= target_plate['count']:
-                        target_plate['churro_details'][c_choice - 1]['sauce'] = selected_sauce
-                        print(f"\n[🍯] Added {selected_sauce} ({style}) to Churro #{c_choice}.")
-                    else:
-                        print("Invalid churro number.")
-                else:
-                    print("Invalid sauce choice.")
+                    # Handle numerical selection
+                    try:
+                        s_choice = int(s_input) - 1
+                        if 0 <= s_choice < len(SAUCES):
+                            selected_sauce = SAUCES[s_choice]
+
+                            style = input("Select style (Drizzled / On the Side): ").strip().title()
+                            if not style: style = "Drizzled"
+
+                            for churro in target_plate['churro_details']:
+                                churro['sauce'] = selected_sauce
+                            print(f"\n[🍯] Added {selected_sauce} ({style}) to churros on Plate #{p_choice + 1}.")
+                            break  # Break out of the loop since item was applied successfully
+                        else:
+                            print("Invalid sauce choice.")
+                    except ValueError:
+                        print("Please enter a valid option (Number, T, or C).")
             else:
                 print("Invalid plate selection.")
         except ValueError:
-            print("Please enter valid numbers.")
+            print("Please enter valid numbers for plate selection.")
 
         return "added_sauce"
 
