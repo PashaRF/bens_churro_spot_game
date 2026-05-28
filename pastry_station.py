@@ -29,7 +29,7 @@ class PastryStation:
 
 # --- Central Module Interface Hooks ---
 
-def display_menu(game_state):
+def display_menu():
     '''Display the menu for the Pastry Station'''
     menu_text = (
         "\n=== PASTRY STATION ===\n"
