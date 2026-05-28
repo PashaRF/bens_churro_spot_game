@@ -75,10 +75,17 @@ def format_time(seconds):
 
 
 def customer_timer():
-    """Runs in the background, adding a customer every 45-120 seconds."""
+    """Runs in the background, adding a customer every 45-120 seconds (first is 5-10s)."""
+    # Flag to track if we are waiting for the very first customer
+    is_first_customer = True
+
     while game_state["is_running"]:
-        # Wait a random amount of time between 45 and 120 seconds
-        wait_time = random.randint(45, 120)
+        # Set a short timer for the first customer, standard timer for the rest
+        if is_first_customer:
+            wait_time = random.randint(5, 10)
+            is_first_customer = False  # Turn off the flag for all future loops
+        else:
+            wait_time = random.randint(45, 120)
 
         # Sleep in small increments so the thread can exit cleanly if the game closes
         for _ in range(wait_time):
@@ -96,7 +103,6 @@ def customer_timer():
         # Print bell sound (the \r clears the current input line momentarily to print this)
         print(
             "\n\r[🛎️ DING! A new customer has arrived at the Front Counter!] \n> ", end="")
-
 # --- Main Game Loop ---
 
 
