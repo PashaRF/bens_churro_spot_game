@@ -1,4 +1,4 @@
-'''temporary front counter for testing'''
+'''Front counter module'''
 import random
 import time
 
@@ -120,11 +120,16 @@ class FrontCounter:
         num_churros = random.randint(1, 6)
         chosen_shape = random.choice(SHAPES)
 
+        # --- THE FIX ---
+        # Pick ONE random sauce and ONE random topping for the whole ticket
+        chosen_sauce = random.choice(SAUCES)
+        chosen_topping = random.choice(TOPPINGS)
+
         churro_details = []
         for _ in range(num_churros):
             churro_details.append({
-                "sauce": random.choice(SAUCES),
-                "topping": random.choice(TOPPINGS)
+                "sauce": chosen_sauce,
+                "topping": chosen_topping
             })
 
         # 5. Create the ticket and link it

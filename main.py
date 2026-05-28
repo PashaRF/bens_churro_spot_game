@@ -6,7 +6,6 @@ import random
 import threading
 
 # Import the other station modules
-# Ensure these files are in the same directory and have appropriate functions!
 import front_counter
 import pastry_station
 import fry_station
@@ -21,7 +20,6 @@ game_state = {
     "tickets": [],
     "start_time": 0,
 
-    # ADD THIS LINE TO FIX THE ERROR:
     "front_counter": front_counter.FrontCounter(),
     "fry_station": fry_station.FryStation(),
     "pastry_station": pastry_station.PastryStation(),
@@ -62,7 +60,6 @@ def start_new_game():
 def load_game():
     """Mock function to load an old save."""
     print("Loading previous save data...")
-    # Add your actual file reading logic here
     game_state["character_name"] = "Returning Employee"
     print("Save loaded successfully!\n")
 
@@ -95,9 +92,30 @@ def customer_timer():
                 return
             time.sleep(1)
 
-        # --- THE FIX ---
-        # Pull a random name directly from the front_counter module's pool
-        arrival_name = random.choice(front_counter.NAMES_POOL)
+        # --- UNIQUE NAME LOGIC ---
+        # 1. Compile a set of all customer names currently active in the shop
+        existing_names = set()
+
+        # Check pending tickets waiting at the door (dictionaries)
+        for ticket in game_state["tickets"]:
+            if isinstance(ticket, dict) and "name" in ticket:
+                existing_names.add(ticket["name"])
+
+        # Check customers who have already ordered at the front counter
+        if game_state.get("front_counter"):
+            for customer in game_state["front_counter"].waiting_customers:
+                existing_names.add(customer.name)
+
+        # 2. Filter out names that are already taken
+        available_names = [
+            name for name in front_counter.NAMES_POOL if name not in existing_names]
+
+        # 3. Determine final name choice
+        if available_names:
+            arrival_name = random.choice(available_names)
+        else:
+            # Safeguard: if the shop is so full that ALL pool names are taken, append a suffix
+            arrival_name = f"{random.choice(front_counter.NAMES_POOL)} II"
 
         # Add customer and ring bell
         new_ticket = {
@@ -109,12 +127,12 @@ def customer_timer():
         # Print bell sound with their actual name!
         print(
             f"\n\r[🛎️ DING! {arrival_name} just walked in the door!] \n> ", end="")
+
 # --- Main Game Loop ---
 
 
 def main():
     '''Main function to run the game loop.'''
-    # 1. Boot up and Save Check
     if check_save_file():
         choice = input("Old save found! Would you like to (C)ontinue "
                        "or start a (N)ew game? [C/N]: ").strip().upper()
@@ -125,13 +143,11 @@ def main():
     else:
         start_new_game()
 
-    # 2. Start Clock & Customer Timer
     game_state["start_time"] = time.time()
 
     customer_thread = threading.Thread(target=customer_timer, daemon=True)
     customer_thread.start()
 
-    # 3. Game Tick (Do-While equivalent)
     while game_state["is_running"]:
         elapsed_time = time.time() - game_state["start_time"]
 
@@ -140,12 +156,10 @@ def main():
         print(f"📍 Current Station: {game_state['current_station']}")
         print(f"{'='*40}")
 
-        # Display Standard Menu
         print("1. Change Station")
         print("2. Check ticket total")
         print("3. Check ticket")
 
-        # Call specific station menus dynamically based on location
         print("\n--- Station Options ---")
         if game_state["current_station"] == "Front Counter":
             front_counter.display_menu()
@@ -161,10 +175,8 @@ def main():
         print("Q. Quit Game")
         print("-" * 40)
 
-        # Wait for user input
         choice = input("Select an option: ").strip().upper()
 
-        # Process Main Menu Inputs
         if choice == '1':
             print("\nAvailable Stations:")
             for i, station in enumerate(stations):
@@ -188,7 +200,6 @@ def main():
             else:
                 print("\n--- Active Tickets ---")
                 for i, ticket in enumerate(game_state['tickets']):
-                    # Check if it's a Ticket object or a background thread dictionary
                     if hasattr(ticket, 'shape'):
                         print(
                             f"Ticket {i+1}: {ticket.num_churros} {ticket.shape} Churros")
@@ -202,9 +213,7 @@ def main():
                     selected = game_state['tickets'][int(t_choice)-1]
                     print("\n[ Ticket Details ]")
 
-                    # Print dynamically based on data structure type
                     if hasattr(selected, 'shape'):
-                        # This safely calls the __str__ definition inside front_counter.py
                         print(selected)
                     else:
                         print(f"Name: {selected['name']}")
@@ -213,11 +222,9 @@ def main():
                     print("Returning to menu.")
         elif choice == 'Q':
             print("Packing up for the day! Goodbye.")
-            # We can put save logic here later
             game_state["is_running"] = False
 
         else:
-            # If it's not a main menu option, pass the input to the active station
             if game_state["current_station"] == "Front Counter":
                 front_counter.handle_input(choice, game_state)
             elif game_state["current_station"] == "Pastry Station":
