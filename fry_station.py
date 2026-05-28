@@ -2,7 +2,7 @@
 import time
 
 
-def display_menu(game_state):
+def display_menu():
     '''Display the menu for the Fry Station'''
     menu_text = (
         "\n=== FRY STATION ===\n"

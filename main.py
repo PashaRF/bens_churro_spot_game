@@ -24,7 +24,9 @@ game_state = {
     # ADD THIS LINE TO FIX THE ERROR:
     "front_counter": front_counter.FrontCounter(),
     "fry_station": fry_station.FryStation(),
-    "pastry_station": pastry_station.PastryStation()
+    "pastry_station": pastry_station.PastryStation(),
+    "topping_station": topping_station.ToppingStation(),
+    "pay_counter": pay_counter.PayCounter()
 }
 
 stations = [
@@ -146,15 +148,15 @@ def main():
         # Call specific station menus dynamically based on location
         print("\n--- Station Options ---")
         if game_state["current_station"] == "Front Counter":
-            front_counter.display_menu(game_state)
+            front_counter.display_menu()
         elif game_state["current_station"] == "Pastry Station":
-            pastry_station.display_menu(game_state)
+            pastry_station.display_menu()
         elif game_state["current_station"] == "Fry Station":
-            fry_station.display_menu(game_state)
+            fry_station.display_menu()
         elif game_state["current_station"] == "Topping Station":
-            topping_station.display_menu(game_state)
+            topping_station.display_menu()
         elif game_state["current_station"] == "Pay Counter":
-            pay_counter.display_menu(game_state)
+            pay_counter.display_menu()
 
         print("Q. Quit Game")
         print("-" * 40)
@@ -198,7 +200,7 @@ def main():
                     "Enter ticket number to view details (or press enter to cancel): ")
                 if t_choice.isdigit() and 1 <= int(t_choice) <= len(game_state['tickets']):
                     selected = game_state['tickets'][int(t_choice)-1]
-                    print(f"\n[ Ticket Details ]")
+                    print("\n[ Ticket Details ]")
 
                     # Print dynamically based on data structure type
                     if hasattr(selected, 'shape'):
