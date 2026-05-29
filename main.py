@@ -4,6 +4,7 @@ import os
 import time
 import random
 import threading
+import pickle
 
 # Import the other station modules
 import front_counter
@@ -11,6 +12,7 @@ import pastry_station
 import fry_station
 import topping_station
 import pay_counter
+
 
 # --- Game State ---
 game_state = {
@@ -37,11 +39,39 @@ stations = [
 
 # --- Helper Functions ---
 
+SAVE_FILE_PKL = "savegame.pkl"
 
 def check_save_file():
-    """Checks if a mock save file exists."""
-    return os.path.exists("savegame.txt")
+    """Checks if a Pickle save file exists."""
+    return os.path.exists(SAVE_FILE_PKL)
 
+def save_game_pickle(game_state):
+    """Saves the entire complex game state (objects included) using Pickle."""
+    print("\nSaving game progress...")
+    try:
+        # Note the "wb" (write binary) mode, which pickle requires
+        with open(SAVE_FILE_PKL, "wb") as file:
+            pickle.dump(game_state, file)
+        print("Game saved successfully!")
+    except Exception as e:
+        print(f"\n[!] Save Error: {e}")
+
+def load_game(game_state):
+    """Loads an old save from a Pickle file."""
+    print("Loading previous save data...")
+    try:
+        # Note the "rb" (read binary) mode
+        with open(SAVE_FILE_PKL, "rb") as file:
+            saved_data = pickle.load(file)
+
+            # Clear current state and load in the saved state completely
+            game_state.clear()
+            game_state.update(saved_data)
+
+        print(f"Welcome back to the shop, {game_state.get('character_name', 'Employee')}!")
+        print("Save loaded successfully!\n")
+    except Exception as e:
+        print(f"\n[!] Failed to load save file: {e}")
 
 def start_new_game():
     """Initializes a new game and prints the intro."""
@@ -56,14 +86,6 @@ def start_new_game():
 
     input("\nPress ENTER to start your shift...")
 
-
-def load_game():
-    """Mock function to load an old save."""
-    print("Loading previous save data...")
-    game_state["character_name"] = "Returning Employee"
-    print("Save loaded successfully!\n")
-
-
 def format_time(seconds):
     """Formats elapsed seconds into MM:SS format."""
     mins = int(seconds // 60)
@@ -71,7 +93,6 @@ def format_time(seconds):
     return f"{mins:02d}:{secs:02d}"
 
 # --- Background Threads ---
-
 
 def customer_timer():
     """Runs in the background, adding a customer every 45-120 seconds (first is 5-10s)."""
@@ -137,7 +158,7 @@ def main():
         choice = input("Old save found! Would you like to (C)ontinue "
                        "or start a (N)ew game? [C/N]: ").strip().upper()
         if choice == 'C':
-            load_game()
+            load_game(game_state)
         else:
             start_new_game()
     else:
@@ -222,6 +243,7 @@ def main():
                     print("Returning to menu.")
         elif choice == 'Q':
             print("Packing up for the day! Goodbye.")
+            save_game_pickle(game_state)
             game_state["is_running"] = False
 
         else:
