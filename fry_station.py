@@ -148,8 +148,8 @@ def handle_input(choice, game_state):
 
 # --- Configuration Constants ---
 SHAPES = ["Straight", "Loop", "Spiral"]
-# Updated to 30 seconds per side
-COOK_TIME_PER_SIDE = 30.0
+# Updated to 50 seconds per side
+COOK_TIME_PER_SIDE = 50.0
 
 
 class Fryer:

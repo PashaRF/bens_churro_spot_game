@@ -105,7 +105,7 @@ def customer_timer():
             wait_time = random.randint(5, 10)
             is_first_customer = False
         else:
-            wait_time = random.randint(45, 120)
+            wait_time = random.randint(90, 140)
 
         # Sleep in small increments so the thread can exit cleanly if the game closes
         for _ in range(wait_time):
