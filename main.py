@@ -19,6 +19,7 @@ game_state = {
     "is_running": True,
     "character_name": "",
     "current_station": "Front Counter",
+    "waiting_at_door": [],  # <-- NEW: Dedicated list for people who just arrived
     "tickets": [],
     "start_time": 0,
 
@@ -68,11 +69,14 @@ def load_game(game_state):
             game_state.clear()
             game_state.update(saved_data)
 
+        # --- THE FIX: Catch old saves up to the new version ---
+        if "waiting_at_door" not in game_state:
+            game_state["waiting_at_door"] = []
+
         print(f"Welcome back to the shop, {game_state.get('character_name', 'Employee')}!")
         print("Save loaded successfully!\n")
     except Exception as e:
         print(f"\n[!] Failed to load save file: {e}")
-
 def start_new_game():
     """Initializes a new game and prints the intro."""
     print("\n--- Welcome to Ben's Churro Spot! ---")
@@ -117,10 +121,9 @@ def customer_timer():
         # 1. Compile a set of all customer names currently active in the shop
         existing_names = set()
 
-        # Check pending tickets waiting at the door (dictionaries)
-        for ticket in game_state["tickets"]:
-            if isinstance(ticket, dict) and "name" in ticket:
-                existing_names.add(ticket["name"])
+        # Check pending customers waiting at the door
+        for pending in game_state["waiting_at_door"]:
+            existing_names.add(pending["name"])
 
         # Check customers who have already ordered at the front counter
         if game_state.get("front_counter"):
@@ -144,11 +147,13 @@ def customer_timer():
             arrival_name = f"{random.choice(front_counter.NAMES_POOL)} II"
 
         # Add customer and ring bell
-        new_ticket = {
+        new_arrival = {
             "name": arrival_name,
             "order": "Pending Order details..."
         }
-        game_state["tickets"].append(new_ticket)
+        
+        # --- THE FIX: Put them in the waiting line, NOT the ticket rail ---
+        game_state["waiting_at_door"].append(new_arrival)
 
         # Print bell sound with their actual name!
         print(
@@ -226,24 +231,14 @@ def main():
             else:
                 print("\n--- Active Tickets ---")
                 for i, ticket in enumerate(game_state['tickets']):
-                    if hasattr(ticket, 'shape'):
-                        print(
-                            f"Ticket {i+1}: {ticket.num_churros} {ticket.shape} Churros")
-                    else:
-                        print(
-                            f"Ticket {i+1}: {ticket['name']} (Waiting at Door)")
+                    print(f"Ticket {i+1}: {ticket.num_churros} {ticket.shape} Churros")
 
                 t_choice = input(
                     "Enter ticket number to view details (or press enter to cancel): ")
                 if t_choice.isdigit() and 1 <= int(t_choice) <= len(game_state['tickets']):
                     selected = game_state['tickets'][int(t_choice)-1]
                     print("\n[ Ticket Details ]")
-
-                    if hasattr(selected, 'shape'):
-                        print(selected)
-                    else:
-                        print(f"Name: {selected['name']}")
-                        print(f"Order: {selected['order']}")
+                    print(selected)
                 else:
                     print("Returning to menu.")
         elif choice == 'Q':
