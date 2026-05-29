@@ -127,6 +127,11 @@ def customer_timer():
             for customer in game_state["front_counter"].waiting_customers:
                 existing_names.add(customer.name)
 
+        # --- 🚨 CUSTOMER CAP LOGIC 🚨 ---
+        # If there are 8 or more customers currently in the shop, cancel spawning and wait again.
+        if len(existing_names) >= 8:
+            continue
+
         # 2. Filter out names that are already taken
         available_names = [
             name for name in front_counter.NAMES_POOL if name not in existing_names]
