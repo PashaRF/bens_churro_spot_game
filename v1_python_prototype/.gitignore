@@ -1,0 +1,10 @@
+# Ignore all Godot engine cache and system import states
+v2_godot_project/.godot/
+v2_godot_project/.import/
+
+# Ignore local editor layouts per developer
+v2_godot_project/export_presets.cfg
+
+# Ignore Python cache files (if you run prototypes locally)
+**/__pycache__/
+*.pyc
