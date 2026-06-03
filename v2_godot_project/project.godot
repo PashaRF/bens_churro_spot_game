@@ -10,9 +10,12 @@ config_version=5
 
 [application]
 
-config/name="v2_godot_project"
+config/name="Big P's Churro Spot"
 config/features=PackedStringArray("4.6", "Forward Plus")
-config/icon="res://icon.svg"
+
+[autoload]
+
+GlobalState="*uid://ujgrb528kv8c"
 
 [physics]
 
