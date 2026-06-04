@@ -1,0 +1,54 @@
+[gd_scene format=3 uid="uid://bw8u8d3mbv58q"]
+
+[ext_resource type="PackedScene" uid="uid://brght024f1p2e" path="res://fryer_slot_card.tscn" id="1_olt5m"]
+[ext_resource type="Script" uid="uid://ccwjucbkkrrm1" path="res://fry_station.gd" id="1_qcesp"]
+
+[node name="FryStation" type="Node2D" unique_id=1494767721]
+script = ExtResource("1_qcesp")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1725987427]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="LeftSideBar" type="VBoxContainer" parent="HBoxContainer" unique_id=2137046343]
+layout_mode = 2
+
+[node name="BinLabel" type="Label" parent="HBoxContainer/LeftSideBar" unique_id=460544929]
+layout_mode = 2
+
+[node name="DoughItemList" type="ItemList" parent="HBoxContainer/LeftSideBar" unique_id=793131189]
+layout_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="HBoxContainer" unique_id=424272151]
+layout_mode = 2
+columns = 4
+
+[node name="FryerSlotCard" parent="HBoxContainer/GridContainer" unique_id=935677407 instance=ExtResource("1_olt5m")]
+layout_mode = 2
+
+[node name="FryerSlotCard2" parent="HBoxContainer/GridContainer" unique_id=1636408911 instance=ExtResource("1_olt5m")]
+layout_mode = 2
+slot_id = 2
+
+[node name="FryerSlotCard3" parent="HBoxContainer/GridContainer" unique_id=781123946 instance=ExtResource("1_olt5m")]
+layout_mode = 2
+
+[node name="FryerSlotCard4" parent="HBoxContainer/GridContainer" unique_id=2072893501 instance=ExtResource("1_olt5m")]
+layout_mode = 2
+slot_id = 4
+
+[node name="FryerSlotCard5" parent="HBoxContainer/GridContainer" unique_id=27048334 instance=ExtResource("1_olt5m")]
+layout_mode = 2
+slot_id = 5
+
+[node name="FryerSlotCard6" parent="HBoxContainer/GridContainer" unique_id=764118420 instance=ExtResource("1_olt5m")]
+layout_mode = 2
+slot_id = 6
+
+[node name="FryerSlotCard7" parent="HBoxContainer/GridContainer" unique_id=1896509676 instance=ExtResource("1_olt5m")]
+layout_mode = 2
+slot_id = 7
+
+[node name="FryerSlotCard8" parent="HBoxContainer/GridContainer" unique_id=1054287582 instance=ExtResource("1_olt5m")]
+layout_mode = 2
+slot_id = 8

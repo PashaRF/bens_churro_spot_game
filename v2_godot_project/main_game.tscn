@@ -66,4 +66,4 @@ text = "Pay Counter"
 
 [node name="CustomerSpawnTimer" type="Timer" parent="." unique_id=1083685326]
 
-[node name="Timer" type="Timer" parent="." unique_id=1666242779]
+[node name="ScreenTimer" type="Timer" parent="." unique_id=1666242779]

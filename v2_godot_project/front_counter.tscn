@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://bq1luehoio08h"]
+
+[ext_resource type="Script" uid="uid://2objyk6o5fq2" path="res://front_counter.gd" id="1_4ygxf"]
+
+[node name="FrontCounter" type="Node2D" unique_id=1658717801]
+script = ExtResource("1_4ygxf")
+
+[node name="Button" type="Button" parent="." unique_id=2070428420]
+offset_right = 8.0
+offset_bottom = 8.0
+text = "Check Register & Take Next Order"
+
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

@@ -1,15 +1,10 @@
 extends Node2D
 
-@onready var ticket_rail_bar: HBoxContainer = $UI_Layer/MainControlLayout/TicketRailBar
-@onready var workspace: PanelContainer = $UI_Layer/MainControlLayout/StationWorkspaceContainer
+@onready var ticket_rail_bar: HBoxContainer = $CanvasLayer/MainControlLayout/TicketRailBar
+@onready var workspace: PanelContainer =$CanvasLayer/MainControlLayout/StationWorkspaceContainer
 @onready var shift_timer: Timer = $ScreenTimer
 @onready var spawn_timer: Timer = $CustomerSpawnTimer
 var is_first_customer: bool = true
-
-func _enter_tree() -> void:
-	# Prime the spawner setup pipeline parameters on scene tree initialization entry
-	spawn_timer.timeout.connect(_on_customer_spawn_trigger)
-	_calculate_next_spawn_interval()
 
 func _calculate_next_spawn_interval() -> void:
 	# Matches python random choice limits: 5-10s first, 90-140s subsequent loops
@@ -53,13 +48,17 @@ func _on_customer_spawn_trigger() -> void:
 	# Loop spawner cleanly
 	_calculate_next_spawn_interval()
 func _ready() -> void:
-	# Configure and kick-off background clock tracking loop
+	# 1. Configure and kick-off background clock tracking loop (Shift Timer)
 	shift_timer.wait_time = 1.0
 	shift_timer.autostart = true
 	shift_timer.timeout.connect(_on_second_passed)
 	shift_timer.start()
 	
-	# Load default initialization viewport window panel on shift start
+	# 2. Configure and kick-off the Customer Spawner (Moved from _enter_tree)
+	spawn_timer.timeout.connect(_on_customer_spawn_trigger)
+	_calculate_next_spawn_interval()
+	
+	# 3. Load default initialization view
 	switch_station_view("Front Counter")
 
 func _on_second_passed() -> void:
