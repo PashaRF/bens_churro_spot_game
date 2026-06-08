@@ -48,6 +48,10 @@ func _on_customer_spawn_trigger() -> void:
 	# Loop spawner cleanly
 	_calculate_next_spawn_interval()
 func _ready() -> void:
+	print("READY FROM MAIN")
+	print("Button is: ", $CanvasLayer/MainControlLayout/StationSwitchBar/FrontCounterBtn)
+	$CanvasLayer/MainControlLayout/StationSwitchBar/FrontCounterBtn.pressed.connect(func(): switch_station_view("Front Counter"))
+	$CanvasLayer/MainControlLayout/StationSwitchBar/PastryBtn.pressed.connect(func(): switch_station_view("Fry Station"))
 	# 1. Configure and kick-off background clock tracking loop (Shift Timer)
 	shift_timer.wait_time = 1.0
 	shift_timer.autostart = true
@@ -86,3 +90,7 @@ func switch_station_view(station_name: String) -> void:
 		var instance = scene_resource.instantiate()
 		workspace.add_child(instance)
 		
+func _input(event):
+	if event.is_action_pressed("ui_accept"):
+		print("Switching!")
+		switch_station_view("Front Counter")
