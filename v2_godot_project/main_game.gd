@@ -57,7 +57,8 @@ func _ready() -> void:
 	shift_timer.autostart = true
 	shift_timer.timeout.connect(_on_second_passed)
 	shift_timer.start()
-	
+	$CanvasLayer/MainControlLayout/StationSwitchBar/FrontCounterBtn.pressed.connect(func(): switch_station_view("Front Counter"))
+	$CanvasLayer/MainControlLayout/StationSwitchBar/FryBtn.pressed.connect(func(): switch_station_view("Fry Station"))
 	# 2. Configure and kick-off the Customer Spawner (Moved from _enter_tree)
 	spawn_timer.timeout.connect(_on_customer_spawn_trigger)
 	_calculate_next_spawn_interval()
@@ -83,14 +84,25 @@ func switch_station_view(station_name: String) -> void:
 		"Pastry Station": target_scene_path = "res://PastryStation.tscn"
 		"Fry Station": target_scene_path = "res://FryStation.tscn"
 		"Topping Station": target_scene_path = "res://ToppingStation.tscn"
-		"Pay Counter": target_scene_path = "res://PayCounter.tscn"
+		"Pay Counter": target_scene_path = "res://PayCounter.tscn" # Ensure this line matches exactly!
 		
 	if ResourceLoader.exists(target_scene_path):
 		var scene_resource = load(target_scene_path)
 		var instance = scene_resource.instantiate()
 		workspace.add_child(instance)
 		
-func _input(event):
-	if event.is_action_pressed("ui_accept"):
-		print("Switching!")
-		switch_station_view("Front Counter")
+
+func _on_front_counter_btn_pressed() -> void:
+	switch_station_view("Front Counter")
+
+func _on_pastry_btn_pressed() -> void:
+	switch_station_view("Pastry Station")
+
+func _on_fry_btn_pressed() -> void:
+	switch_station_view("Fry Station")
+
+func _on_topping_btn_pressed() -> void:
+	switch_station_view("Topping Station")
+
+func _on_pay_btn_pressed() -> void:
+	switch_station_view("Pay Counter")
