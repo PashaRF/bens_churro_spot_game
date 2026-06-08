@@ -53,7 +53,8 @@ func _ready() -> void:
 	shift_timer.autostart = true
 	shift_timer.timeout.connect(_on_second_passed)
 	shift_timer.start()
-	
+	$CanvasLayer/MainControlLayout/StationSwitchBar/FrontCounterBtn.pressed.connect(func(): switch_station_view("Front Counter"))
+	$CanvasLayer/MainControlLayout/StationSwitchBar/FryBtn.pressed.connect(func(): switch_station_view("Fry Station"))
 	# 2. Configure and kick-off the Customer Spawner (Moved from _enter_tree)
 	spawn_timer.timeout.connect(_on_customer_spawn_trigger)
 	_calculate_next_spawn_interval()
