@@ -67,3 +67,9 @@ text = "Pay Counter"
 [node name="CustomerSpawnTimer" type="Timer" parent="." unique_id=1083685326]
 
 [node name="ScreenTimer" type="Timer" parent="." unique_id=1666242779]
+
+[connection signal="pressed" from="CanvasLayer/MainControlLayout/StationSwitchBar/FrontCounterBtn" to="." method="_on_front_counter_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/MainControlLayout/StationSwitchBar/PastryBtn" to="." method="_on_pastry_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/MainControlLayout/StationSwitchBar/FryBtn" to="." method="_on_fry_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/MainControlLayout/StationSwitchBar/ToppingBtn" to="." method="_on_topping_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/MainControlLayout/StationSwitchBar/PayBtn" to="." method="_on_pay_btn_pressed"]

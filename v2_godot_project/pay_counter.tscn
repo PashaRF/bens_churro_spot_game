@@ -1,0 +1,54 @@
+[gd_scene format=3 uid="uid://c2n2pkxf8aiog"]
+
+[ext_resource type="Script" uid="uid://det53s2qcttdk" path="res://pay_counter.gd" id="1_flo7r"]
+
+[node name="PayCounter" type="Node2D" unique_id=168826527]
+script = ExtResource("1_flo7r")
+
+[node name="MainLayout" type="VBoxContainer" parent="." unique_id=635016652]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="StationTitle" type="Label" parent="MainLayout" unique_id=759045803]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "THE PAY COUNTER"
+
+[node name="SelectionSplits" type="HBoxContainer" parent="MainLayout" unique_id=1767323857]
+layout_mode = 2
+
+[node name="CustomerSection" type="VBoxContainer" parent="MainLayout/SelectionSplits" unique_id=1852681133]
+layout_mode = 2
+
+[node name="CustHeader" type="Label" parent="MainLayout/SelectionSplits/CustomerSection" unique_id=1728782677]
+layout_mode = 2
+text = "1. Select Customer"
+
+[node name="CustomerList" type="ItemList" parent="MainLayout/SelectionSplits/CustomerSection" unique_id=1523066611]
+layout_mode = 2
+
+[node name="PlateSelection" type="VBoxContainer" parent="MainLayout/SelectionSplits" unique_id=1335461733]
+layout_mode = 2
+
+[node name="PlateHeader" type="Label" parent="MainLayout/SelectionSplits/PlateSelection" unique_id=1811588417]
+layout_mode = 2
+text = "2. Select Finished Plate"
+
+[node name="PlateList" type="ItemList" parent="MainLayout/SelectionSplits/PlateSelection" unique_id=2042668455]
+layout_mode = 2
+
+[node name="ActionArea" type="VBoxContainer" parent="MainLayout" unique_id=512299999]
+layout_mode = 2
+
+[node name="ServeButton" type="Button" parent="MainLayout/ActionArea" unique_id=1939641739]
+layout_mode = 2
+text = "Serve Churros & Cash Out"
+
+[node name="ResultsLabel" type="Label" parent="MainLayout/ActionArea" unique_id=1844722893]
+layout_mode = 2
+text = "Select an order above to grade..."
+
+[connection signal="pressed" from="MainLayout/ActionArea/ServeButton" to="." method="_on_serve_button_pressed"]
