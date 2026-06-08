@@ -42,23 +42,22 @@ game_state = {
     "tickets": [],
     "waiting_customers": [],          
     "prepared_dough_queue": [],
-    "finished_plates": [],             # Acts as the Fried Churro Bin waiting processing
+    "finished_plates": [],             
     
     # Multi-Item Active Plate Tracking Node
     "active_plate": {
-        "churros": [],                 # Array supporting multiple items (e.g., ["Straight", "Straight"])
+        "churros": [],                 
         "sauce": "None",
         "topping": "None",
         "is_locked": False
     },
     
-    # Automated Customer Arrival Rate
     "last_arrival_time": 0,
     "arrival_cooldown": 25.0,         
     
-    # Station Tracking Map Supporting 2 Churros per Fryer Basket
+    # Station Tracking Map
     "fryers": {
-        1: [],  # Holds active item dictionaries: {"status": "Frying Side 1", "shape": "...", "time_left": X}
+        1: [],  
         2: [],
         3: [],
         4: []
@@ -69,7 +68,6 @@ input_name_buffer = ""
 
 # --- Helper Functions for Spawning Live Gameplay Entities ---
 def handle_automatic_arrivals():
-    """Tracks system delta time to automatically walk customers into the lobby box."""
     if game_state["screen_state"] != "GAME":
         return
         
@@ -78,23 +76,41 @@ def handle_automatic_arrivals():
         if len(game_state["waiting_customers"]) < 5:
             pool = ["Papa Louie", "Wally", "Penny", "Rita", "Marty", "Big Pauly", "Prudence", "Cooper"]
             chosen_name = random.choice(pool)
+            
+            existing_names = [c["name"] for c in game_state["waiting_customers"]] + [t["customer"] for t in game_state["tickets"]]
+            base_name = chosen_name
+            suffix_counter = 2
+            
+            while chosen_name in existing_names:
+                chosen_name = f"{base_name} {suffix_counter}"
+                suffix_counter += 1
+                
             game_state["waiting_customers"].append({"name": chosen_name})
             
         game_state["last_arrival_time"] = now
 
 def update_fryer_timers():
-    """Ticks down frying states for all contents across all multi-churro baskets."""
+    """Ticks down frying states for all contents across all multi-churro baskets, including burn timers."""
     for f_id, items in game_state["fryers"].items():
         for fryer in items:
             if fryer["status"] == "Frying Side 1":
                 fryer["time_left"] -= 1 / 60.0
                 if fryer["time_left"] <= 0:
                     fryer["status"] = "Ready to Flip"
-                    fryer["time_left"] = 8.0  
+                    fryer["time_left"] = 6.0  # 6 seconds to flip before burning
+            elif fryer["status"] == "Ready to Flip":
+                fryer["time_left"] -= 1 / 60.0
+                if fryer["time_left"] <= 0:
+                    fryer["status"] = "Burnt"
             elif fryer["status"] == "Frying Side 2":
                 fryer["time_left"] -= 1 / 60.0
                 if fryer["time_left"] <= 0:
                     fryer["status"] = "Ready to Collect"
+                    fryer["time_left"] = 6.0  # 6 seconds to collect before burning
+            elif fryer["status"] == "Ready to Collect":
+                fryer["time_left"] -= 1 / 60.0
+                if fryer["time_left"] <= 0:
+                    fryer["status"] = "Burnt"
 
 # --- Drawing/Rendering Layout Code ---
 def draw_intro_screen():
@@ -313,7 +329,7 @@ def draw_game_screen():
                         lbl_color = TEXT_COLOR
                     elif churro["status"] == "Ready to Flip":
                         pygame.draw.rect(screen, ACCENT_COLOR, s_rect, border_radius=6)
-                        lbl_txt = f"🔄 FLIP {churro['shape'].upper()}"
+                        lbl_txt = f"🔄 FLIP {churro['shape'].upper()} (Burns in {max(0.0, churro['time_left']):.1f}s)"
                         lbl_color = PANEL_COLOR
                     elif churro["status"] == "Frying Side 2":
                         pygame.draw.rect(screen, PANEL_COLOR, s_rect, border_radius=6)
@@ -322,9 +338,14 @@ def draw_game_screen():
                         lbl_color = TEXT_COLOR
                     elif churro["status"] == "Ready to Collect":
                         pygame.draw.rect(screen, GREEN_BUTTON, s_rect, border_radius=6)
-                        lbl_txt = f"📥 COLLECT {churro['shape'].upper()}"
+                        lbl_txt = f"📥 COLLECT {churro['shape'].upper()} (Burns in {max(0.0, churro['time_left']):.1f}s)"
+                        lbl_color = PANEL_COLOR
+                    elif churro["status"] == "Burnt":
+                        pygame.draw.rect(screen, RED_BUTTON, s_rect, border_radius=6)
+                        lbl_txt = f"🗑️ TRASH BURNT {churro['shape'].upper()}"
                         lbl_color = PANEL_COLOR
                     
+                    # FIXED: Used get_height() for the Y coordinate centering math
                     surf = FONT_BODY.render(lbl_txt, True, lbl_color)
                     screen.blit(surf, (s_rect.x + 15, s_rect.y + (s_rect.height // 2 - surf.get_height() // 2)))
                 else:
@@ -335,7 +356,6 @@ def draw_game_screen():
                         lbl_color = PANEL_COLOR
                     else:
                         pygame.draw.rect(screen, PANEL_COLOR, s_rect, border_radius=6)
-                        # FIXED: Removed the invalid border_style=1 argument
                         pygame.draw.rect(screen, BORDER_COLOR, s_rect, width=1, border_radius=6)
                         lbl_txt = "[ Empty Slot ]"
                         lbl_color = BORDER_COLOR
@@ -393,7 +413,14 @@ def draw_game_screen():
             screen.blit(FONT_BODY.render(line, True, TEXT_COLOR), (870, ly))
             ly += 26
             
-        btn_build = pygame.Rect(870, 560, 270, 55)
+        # Remove Item / Undo Button
+        btn_undo = pygame.Rect(870, 520, 270, 35)
+        if game_state["active_plate"]["churros"] and not game_state["active_plate"]["is_locked"]:
+            pygame.draw.rect(screen, RED_BUTTON, btn_undo, border_radius=8)
+            lbl_undo = FONT_BODY.render("↩️ Remove Last Churro", True, PANEL_COLOR)
+            screen.blit(lbl_undo, (btn_undo.x + (btn_undo.width // 2 - lbl_undo.get_width() // 2), btn_undo.y + 8))
+
+        btn_build = pygame.Rect(870, 565, 270, 50)
         has_items = len(game_state["active_plate"]["churros"]) > 0
         is_locked = game_state["active_plate"]["is_locked"]
         
@@ -402,7 +429,7 @@ def draw_game_screen():
         
         status_lbl = "Locked & Ready" if is_locked else "✨ Coat & Lock Plate"
         lbl_b = FONT_SUBTITLE.render(status_lbl, True, PANEL_COLOR)
-        screen.blit(lbl_b, (btn_build.x + (btn_build.width // 2 - lbl_b.get_width() // 2), btn_build.y + 16))
+        screen.blit(lbl_b, (btn_build.x + (btn_build.width // 2 - lbl_b.get_width() // 2), btn_build.y + 14))
         
         # Bottom Inventory Display Box (Fried Bin)
         inv_box = pygame.Rect(290, 650, 870, 110)
@@ -516,6 +543,8 @@ def handle_gameplay_clicks(mx, my):
                     elif churro["status"] == "Ready to Collect":
                         game_state["finished_plates"].append({"shape": churro["shape"]})
                         items.pop(0)
+                    elif churro["status"] == "Burnt":
+                        items.pop(0) 
                 elif len(items) == 0 and game_state["prepared_dough_queue"]:
                     next_dough = game_state["prepared_dough_queue"].pop(0)
                     items.append({"status": "Frying Side 1", "shape": next_dough, "time_left": 10.0})
@@ -531,13 +560,14 @@ def handle_gameplay_clicks(mx, my):
                     elif churro["status"] == "Ready to Collect":
                         game_state["finished_plates"].append({"shape": churro["shape"]})
                         items.pop(1)
+                    elif churro["status"] == "Burnt":
+                        items.pop(1) 
                 elif len(items) == 1 and game_state["prepared_dough_queue"]:
                     next_dough = game_state["prepared_dough_queue"].pop(0)
                     items.append({"status": "Frying Side 1", "shape": next_dough, "time_left": 10.0})
                 return
 
     elif current == "Topping Station":
-        # Sauce buttons interaction loop
         sauces = ["None", "Chocolate", "Caramel", "Condensed Milk"]
         for idx, s in enumerate(sauces):
             btn_s = pygame.Rect(290, 350 + (idx * 55), 240, 48)
@@ -545,16 +575,22 @@ def handle_gameplay_clicks(mx, my):
                 game_state["active_plate"]["sauce"] = s
                 return
                 
-        # Toppings buttons interaction loop
         toppings = ["None", "Cinnamon Sugar", "Sprinkles", "Crushed Oreos"]
         for idx, t in enumerate(toppings):
             btn_t = pygame.Rect(570, 350 + (idx * 55), 240, 48)
             if btn_t.collidepoint((mx, my)):
                 game_state["active_plate"]["topping"] = t
                 return
-                
+        
+        # Click Undo Button
+        btn_undo = pygame.Rect(870, 520, 270, 35)
+        if btn_undo.collidepoint((mx, my)) and game_state["active_plate"]["churros"] and not game_state["active_plate"]["is_locked"]:
+            removed_churro = game_state["active_plate"]["churros"].pop()
+            game_state["finished_plates"].append({"shape": removed_churro})
+            return
+            
         # Lock Action button
-        btn_build = pygame.Rect(870, 560, 270, 55)
+        btn_build = pygame.Rect(870, 565, 270, 50)
         if btn_build.collidepoint((mx, my)) and game_state["active_plate"]["churros"]:
             game_state["active_plate"]["is_locked"] = True
             return
