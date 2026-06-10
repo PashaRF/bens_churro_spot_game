@@ -1,0 +1,78 @@
+{
+    "character_name": "Ben",
+    "money": 0.0,
+    "tickets": [
+        {
+            "id": 1,
+            "customer": "Papa Louie",
+            "shape": "Spiral",
+            "qty": 3,
+            "sauce": "Caramel",
+            "topping": "Crushed Oreos"
+        },
+        {
+            "id": 2,
+            "customer": "Wally",
+            "shape": "Straight",
+            "qty": 3,
+            "sauce": "Caramel",
+            "topping": "Cinnamon Sugar"
+        }
+    ],
+    "waiting_customers": [
+        {
+            "name": "Marty"
+        }
+    ],
+    "prepared_dough_queue": [
+        "Straight",
+        "Straight",
+        "Straight",
+        "Straight",
+        "Straight",
+        "Straight",
+        "Straight"
+    ],
+    "finished_plates": [
+        {
+            "shape": "Straight"
+        },
+        {
+            "shape": "Straight"
+        },
+        {
+            "shape": "Straight"
+        },
+        {
+            "shape": "Straight"
+        }
+    ],
+    "active_plate": {
+        "churros": [
+            "Straight",
+            "Straight",
+            "Straight",
+            "Straight"
+        ],
+        "sauce": "Caramel",
+        "topping": "Crushed Oreos",
+        "is_locked": false
+    },
+    "fryers": {
+        "1": [
+            {
+                "status": "Burnt",
+                "shape": "Straight",
+                "time_left": -0.016666666666650353
+            },
+            {
+                "status": "Burnt",
+                "shape": "Straight",
+                "time_left": -0.016666666666650353
+            }
+        ],
+        "2": [],
+        "3": [],
+        "4": []
+    }
+}
