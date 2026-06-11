@@ -1,0 +1,92 @@
+{
+    "character_name": "Peggy",
+    "money": 0.0,
+    "tickets": [
+        {
+            "id": 1,
+            "customer": "Cooper",
+            "shape": "Straight",
+            "qty": 4,
+            "sauce": "Chocolate",
+            "topping": "Cinnamon Sugar"
+        },
+        {
+            "id": 2,
+            "customer": "Big Pauly",
+            "shape": "Straight",
+            "qty": 2,
+            "sauce": "Caramel",
+            "topping": "Sprinkles"
+        }
+    ],
+    "waiting_customers": [],
+    "prepared_dough_queue": [
+        "Straight",
+        "Straight",
+        "Straight",
+        "Straight",
+        "Straight",
+        "Straight",
+        "Straight",
+        "Straight",
+        "Straight",
+        "Straight",
+        "Straight",
+        "Straight",
+        "Straight",
+        "Straight",
+        "Straight",
+        "Straight",
+        "Straight",
+        "Straight",
+        "Straight",
+        "Straight",
+        "Straight",
+        "Straight",
+        "Straight",
+        "Straight",
+        "Straight",
+        "Straight",
+        "Straight",
+        "Straight",
+        "Straight",
+        "Straight",
+        "Straight",
+        "Straight",
+        "Straight",
+        "Straight",
+        "Straight",
+        "Straight",
+        "Straight"
+    ],
+    "finished_plates": [],
+    "active_plate": {
+        "churros": [],
+        "sauce": "None",
+        "topping": "None",
+        "is_locked": false
+    },
+    "fryers": {
+        "1": [
+            {
+                "status": "Frying Side 1",
+                "shape": "Straight",
+                "time_left": 12.75000000000035
+            },
+            {
+                "status": "Frying Side 1",
+                "shape": "Straight",
+                "time_left": 13.333333333333712
+            }
+        ],
+        "2": [
+            {
+                "status": "Frying Side 1",
+                "shape": "Straight",
+                "time_left": 14.4166666666671
+            }
+        ],
+        "3": [],
+        "4": []
+    }
+}
