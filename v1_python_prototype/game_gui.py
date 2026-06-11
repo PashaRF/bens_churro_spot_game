@@ -11,7 +11,7 @@ pygame.font.init()
 
 WIDTH, HEIGHT = 1200, 800
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("🥞 Ben's Churro Spot - Interactive Chef Edition")
+pygame.display.set_caption("Ben's Churro Spot - Interactive Chef Edition")
 clock = pygame.time.Clock()
 
 # --- Cohesive Color Palette ---
@@ -19,7 +19,7 @@ BG_COLOR = (248, 245, 237)       # Warm Bakery Cream
 PANEL_COLOR = (255, 255, 255)    # Clean Card White
 TEXT_COLOR = (44, 34, 30)        # Deep Chocolate Brown
 ACCENT_COLOR = (212, 140, 70)    # Golden Crisp Churro Brown
-BORDER_COLOR = (195, 180, 170)    # Light Muted Taupe
+BORDER_COLOR = (195, 180, 170)   # Light Muted Taupe
 GREEN_BUTTON = (76, 154, 42)     # Success Green
 BLUE_BUTTON = (41, 128, 185)     # Deep Interactive Blue
 RED_BUTTON = (192, 57, 43)       # Alert Crimson
@@ -101,18 +101,17 @@ def load_game():
         game_state["money"] = data.get("money", 0.0)
         game_state["tickets"] = data.get("tickets", [])
         game_state["waiting_customers"] = data.get("waiting_customers", [])
-        game_state["prepared_dough_queue"] = data.get(
-            "prepared_dough_queue", [])
+        game_state["prepared_dough_queue"] = data.get("prepared_dough_queue", [])
         game_state["finished_plates"] = data.get("finished_plates", [])
         game_state["active_plate"] = data.get("active_plate", {
-                                              "churros": [], "sauce": "None", "topping": "None", "is_locked": False})
+            "churros": [], "sauce": "None", "topping": "None", "is_locked": False})
 
         # Re-map JSON string keys back to Pygame integer keys for the fryers dictionary
-        loaded_fryers = data.get(
-            "fryers", {"1": [], "2": [], "3": [], "4": []})
+        loaded_fryers = data.get("fryers", {"1": [], "2": [], "3": [], "4": []})
         game_state["fryers"] = {int(k): v for k, v in loaded_fryers.items()}
         return True
     return False
+
 
 # --- Helper Functions for Spawning Live Gameplay Entities ---
 
@@ -165,6 +164,12 @@ def update_fryer_timers():
                 if fryer["time_left"] <= 0:
                     fryer["status"] = "Burnt"
 
+
+def show_warning(message):
+    game_state["warning_message"] = message
+    game_state["warning_timer"] = 8.0
+
+
 # --- Drawing/Rendering Layout Code ---
 
 
@@ -173,23 +178,18 @@ def draw_intro_screen():
 
     header_rect = pygame.Rect(150, 70, 900, 100)
     pygame.draw.rect(screen, PANEL_COLOR, header_rect, border_radius=15)
-    pygame.draw.rect(screen, ACCENT_COLOR, header_rect,
-                     width=3, border_radius=15)
+    pygame.draw.rect(screen, ACCENT_COLOR, header_rect, width=3, border_radius=15)
 
-    title_text = FONT_TITLE.render(
-        "--- Welcome to Ben's Churro Spot! ---", True, ACCENT_COLOR)
+    title_text = FONT_TITLE.render("--- Welcome to Ben's Churro Spot! ---", True, ACCENT_COLOR)
     screen.blit(title_text, (WIDTH // 2 - title_text.get_width() // 2, 98))
 
     content_rect = pygame.Rect(200, 210, 800, 480)
     pygame.draw.rect(screen, PANEL_COLOR, content_rect, border_radius=15)
-    pygame.draw.rect(screen, BORDER_COLOR, content_rect,
-                     width=2, border_radius=15)
+    pygame.draw.rect(screen, BORDER_COLOR, content_rect, width=2, border_radius=15)
 
     if game_state["intro_stage"] == "NAME":
-        prompt_lbl = FONT_SUBTITLE.render(
-            "Enter your custom character's name:", True, TEXT_COLOR)
-        screen.blit(prompt_lbl, (WIDTH // 2 -
-                    prompt_lbl.get_width() // 2, 280))
+        prompt_lbl = FONT_SUBTITLE.render("Enter your custom character's name:", True, TEXT_COLOR)
+        screen.blit(prompt_lbl, (WIDTH // 2 - prompt_lbl.get_width() // 2, 280))
 
         input_box = pygame.Rect(350, 350, 500, 55)
         pygame.draw.rect(screen, BG_COLOR, input_box, border_radius=8)
@@ -197,12 +197,10 @@ def draw_intro_screen():
             input_name_buffer) > 0 else BORDER_COLOR, input_box, width=2, border_radius=8)
 
         cursor = "|" if (time.time() % 1.0 > 0.5) else ""
-        name_surf = FONT_SUBTITLE.render(
-            input_name_buffer + cursor, True, TEXT_COLOR)
+        name_surf = FONT_SUBTITLE.render(input_name_buffer + cursor, True, TEXT_COLOR)
         screen.blit(name_surf, (input_box.x + 15, input_box.y +
                     (input_box.height // 2 - name_surf.get_height() // 2)))
 
-        # Adaptive UI depending on if a save file already exists on the computer
         if os.path.exists(SAVE_FILE):
             btn_load = pygame.Rect(350, 520, 230, 50)
             pygame.draw.rect(screen, BLUE_BUTTON, btn_load, border_radius=8)
@@ -223,8 +221,7 @@ def draw_intro_screen():
     elif game_state["intro_stage"] == "SPIEL":
         welcome_lbl = FONT_SUBTITLE.render(
             f"Welcome aboard, {game_state['character_name']}!", True, GREEN_BUTTON)
-        screen.blit(welcome_lbl, (WIDTH // 2 -
-                    welcome_lbl.get_width() // 2, 240))
+        screen.blit(welcome_lbl, (WIDTH // 2 - welcome_lbl.get_width() // 2, 240))
 
         spiel_lines = [
             "Here is how it works: You will take orders at the Front Counter,",
@@ -238,8 +235,7 @@ def draw_intro_screen():
         text_y = 300
         for line in spiel_lines:
             line_surf = FONT_SUBTITLE.render(line, True, TEXT_COLOR)
-            screen.blit(line_surf, (WIDTH // 2 -
-                        line_surf.get_width() // 2, text_y))
+            screen.blit(line_surf, (WIDTH // 2 - line_surf.get_width() // 2, text_y))
             text_y += 35
 
         btn_start = pygame.Rect(450, 580, 300, 60)
@@ -255,36 +251,30 @@ def draw_game_screen():
     # --- HEADER MANAGEMENT PANEL ---
     header_rect = pygame.Rect(20, 15, 1160, 70)
     pygame.draw.rect(screen, PANEL_COLOR, header_rect, border_radius=10)
-    pygame.draw.rect(screen, ACCENT_COLOR, header_rect,
-                     width=2, border_radius=10)
+    pygame.draw.rect(screen, ACCENT_COLOR, header_rect, width=2, border_radius=10)
 
-    chef_surf = FONT_SUBTITLE.render(
-        f"🧑‍🍳 Chef: {game_state['character_name']}", True, TEXT_COLOR)
+    chef_surf = FONT_SUBTITLE.render(f"Chef: {game_state['character_name']}", True, TEXT_COLOR)
     screen.blit(chef_surf, (40, 35))
 
-    money_surf = FONT_SUBTITLE.render(
-        f"💰 Earnings: ${game_state['money']:.2f}", True, GREEN_BUTTON)
+    money_surf = FONT_SUBTITLE.render(f"Earnings: ${game_state['money']:.2f}", True, GREEN_BUTTON)
     screen.blit(money_surf, (300, 35))
 
-    # Save & Quit Active Button Layout Setup
     btn_save_quit = pygame.Rect(WIDTH - 180, 25, 140, 40)
     pygame.draw.rect(screen, RED_BUTTON, btn_save_quit, border_radius=6)
-    lbl_sq = FONT_BODY.render("💾 Save & Quit", True, PANEL_COLOR)
+    lbl_sq = FONT_BODY.render("Save & Quit", True, PANEL_COLOR)
     screen.blit(lbl_sq, (btn_save_quit.x + 15, btn_save_quit.y + 10))
 
     elapsed = time.time() - game_state["start_time"]
-    time_str = f"🕒 Time: {int(elapsed // 60):02d}:{int(elapsed % 60):02d}"
+    time_str = f"Time: {int(elapsed // 60):02d}:{int(elapsed % 60):02d}"
     time_surf = FONT_SUBTITLE.render(time_str, True, TEXT_COLOR)
     screen.blit(time_surf, (WIDTH - 210 - time_surf.get_width(), 35))
 
     # --- LIVE ORDER TICKET RAIL ---
     rail_rect = pygame.Rect(20, 100, 1160, 160)
     pygame.draw.rect(screen, PANEL_COLOR, rail_rect, border_radius=10)
-    pygame.draw.rect(screen, BORDER_COLOR, rail_rect,
-                     width=1, border_radius=10)
+    pygame.draw.rect(screen, BORDER_COLOR, rail_rect, width=1, border_radius=10)
 
-    rail_lbl = FONT_BODY.render(
-        "🎟️ ACTIVE ORDER TICKETS (TAKEN ORDERS)", True, BORDER_COLOR)
+    rail_lbl = FONT_BODY.render("ACTIVE ORDER TICKETS (TAKEN ORDERS)", True, BORDER_COLOR)
     screen.blit(rail_lbl, (35, 105))
 
     if not game_state["tickets"]:
@@ -299,14 +289,10 @@ def draw_game_screen():
             pygame.draw.rect(screen, ACCENT_COLOR if idx ==
                              0 else BORDER_COLOR, t_box, width=2, border_radius=6)
 
-            c_lbl = FONT_TICKET.render(
-                f"Cust: {t['customer']}", True, TEXT_COLOR)
-            o_lbl = FONT_TICKET.render(
-                f"Need: {t['qty']}x {t['shape']}", True, TEXT_COLOR)
-            s_lbl = FONT_TICKET.render(
-                f"Sauce: {t['sauce']}", True, ACCENT_COLOR)
-            p_lbl = FONT_TICKET.render(
-                f"Top: {t['topping']}", True, BLUE_BUTTON)
+            c_lbl = FONT_TICKET.render(f"Cust: {t['customer']}", True, TEXT_COLOR)
+            o_lbl = FONT_TICKET.render(f"Need: {t['qty']}x {t['shape']}", True, TEXT_COLOR)
+            s_lbl = FONT_TICKET.render(f"Sauce: {t['sauce']}", True, ACCENT_COLOR)
+            p_lbl = FONT_TICKET.render(f"Top: {t['topping']}", True, BLUE_BUTTON)
 
             screen.blit(c_lbl, (t_box.x + 12, t_box.y + 10))
             screen.blit(o_lbl, (t_box.x + 12, t_box.y + 35))
@@ -317,8 +303,7 @@ def draw_game_screen():
     # --- MAIN WORKSPACE SYSTEM AREA ---
     work_rect = pygame.Rect(260, 280, 920, 500)
     pygame.draw.rect(screen, PANEL_COLOR, work_rect, border_radius=12)
-    pygame.draw.rect(screen, ACCENT_COLOR, work_rect,
-                     width=2, border_radius=12)
+    pygame.draw.rect(screen, ACCENT_COLOR, work_rect, width=2, border_radius=12)
 
     # Left Navigation Sidebar Buttons
     stations_list = ["Front Counter", "Pastry Station",
@@ -326,12 +311,10 @@ def draw_game_screen():
     for idx, name in enumerate(stations_list):
         btn = pygame.Rect(20, 280 + (idx * 75), 220, 60)
         is_active = (game_state["current_station"] == name)
-        pygame.draw.rect(
-            screen, ACCENT_COLOR if is_active else PANEL_COLOR, btn, border_radius=8)
+        pygame.draw.rect(screen, ACCENT_COLOR if is_active else PANEL_COLOR, btn, border_radius=8)
         pygame.draw.rect(screen, ACCENT_COLOR, btn, width=2, border_radius=8)
 
-        lbl = FONT_SUBTITLE.render(
-            name, True, PANEL_COLOR if is_active else TEXT_COLOR)
+        lbl = FONT_SUBTITLE.render(name, True, PANEL_COLOR if is_active else TEXT_COLOR)
         screen.blit(lbl, (btn.x + (btn.width // 2 - lbl.get_width() // 2),
                     btn.y + (btn.height // 2 - lbl.get_height() // 2)))
 
@@ -341,10 +324,8 @@ def draw_game_screen():
     if current == "Front Counter":
         list_box = pygame.Rect(290, 310, 420, 440)
         pygame.draw.rect(screen, BG_COLOR, list_box, border_radius=8)
-        pygame.draw.rect(screen, BORDER_COLOR, list_box,
-                         width=1, border_radius=8)
-        screen.blit(FONT_SUBTITLE.render(
-            "Lobby Waiting Line:", True, TEXT_COLOR), (310, 325))
+        pygame.draw.rect(screen, BORDER_COLOR, list_box, width=1, border_radius=8)
+        screen.blit(FONT_SUBTITLE.render("Lobby Waiting Line:", True, TEXT_COLOR), (310, 325))
 
         if not game_state["waiting_customers"]:
             screen.blit(FONT_BODY.render(
@@ -353,33 +334,27 @@ def draw_game_screen():
             for c_idx, cust in enumerate(game_state["waiting_customers"][:6]):
                 row_y = 370 + (c_idx * 60)
                 row_rect = pygame.Rect(310, row_y, 380, 50)
-                pygame.draw.rect(screen, PANEL_COLOR,
-                                 row_rect, border_radius=6)
-                pygame.draw.rect(screen, BORDER_COLOR,
-                                 row_rect, width=1, border_radius=6)
+                pygame.draw.rect(screen, PANEL_COLOR, row_rect, border_radius=6)
+                pygame.draw.rect(screen, BORDER_COLOR, row_rect, width=1, border_radius=6)
 
-                info_txt = f"👤 {cust['name']} - Waiting to Order"
-                screen.blit(FONT_BODY.render(info_txt, True,
-                            TEXT_COLOR), (325, row_y + 15))
+                info_txt = f"{cust['name']} - Waiting to Order"
+                screen.blit(FONT_BODY.render(info_txt, True, TEXT_COLOR), (325, row_y + 15))
 
         action_box = pygame.Rect(740, 310, 420, 440)
         pygame.draw.rect(screen, BG_COLOR, action_box, border_radius=8)
-        pygame.draw.rect(screen, BORDER_COLOR, action_box,
-                         width=1, border_radius=8)
-        screen.blit(FONT_SUBTITLE.render(
-            "Order Window Desk:", True, TEXT_COLOR), (760, 325))
+        pygame.draw.rect(screen, BORDER_COLOR, action_box, width=1, border_radius=8)
+        screen.blit(FONT_SUBTITLE.render("Order Window Desk:", True, TEXT_COLOR), (760, 325))
 
         if game_state["waiting_customers"]:
             active_customer = game_state["waiting_customers"][0]
             msg_line1 = f"Customer up next: {active_customer['name']}"
-            screen.blit(FONT_BODY.render(
-                msg_line1, True, TEXT_COLOR), (760, 380))
+            screen.blit(FONT_BODY.render(msg_line1, True, TEXT_COLOR), (760, 380))
             screen.blit(FONT_BODY.render(
                 "Click below to write down their order card.", True, BORDER_COLOR), (760, 410))
 
             btn_take = pygame.Rect(760, 460, 380, 65)
             pygame.draw.rect(screen, GREEN_BUTTON, btn_take, border_radius=8)
-            lbl = FONT_SUBTITLE.render("📝 TAKE ORDER SLIP", True, PANEL_COLOR)
+            lbl = FONT_SUBTITLE.render("TAKE ORDER SLIP", True, PANEL_COLOR)
             screen.blit(lbl, (btn_take.x + (btn_take.width // 2 -
                         lbl.get_width() // 2), btn_take.y + 20))
         else:
@@ -396,14 +371,13 @@ def draw_game_screen():
         for idx, shp in enumerate(shapes):
             btn_pipe = pygame.Rect(290 + (idx * 290), 360, 260, 80)
             pygame.draw.rect(screen, ACCENT_COLOR, btn_pipe, border_radius=8)
-            lbl = FONT_SUBTITLE.render(f"➕ Pipe {shp}", True, PANEL_COLOR)
+            lbl = FONT_SUBTITLE.render(f"Pipe {shp}", True, PANEL_COLOR)
             screen.blit(lbl, (btn_pipe.x + (btn_pipe.width // 2 - lbl.get_width() // 2),
                         btn_pipe.y + (btn_pipe.height // 2 - lbl.get_height() // 2)))
 
         tray_box = pygame.Rect(290, 480, 860, 270)
         pygame.draw.rect(screen, BG_COLOR, tray_box, border_radius=8)
-        pygame.draw.rect(screen, BORDER_COLOR, tray_box,
-                         width=1, border_radius=8)
+        pygame.draw.rect(screen, BORDER_COLOR, tray_box, width=1, border_radius=8)
         screen.blit(FONT_SUBTITLE.render(
             "Prepared Tray Queue (Ready to Fry):", True, TEXT_COLOR), (310, 495))
 
@@ -413,12 +387,11 @@ def draw_game_screen():
         else:
             for d_idx, shp in enumerate(game_state["prepared_dough_queue"][:15]):
                 gx = 310 + (d_idx % 5 * 165)
-                gy = 540 + (d_idx // 5 * 65)
+                gy = 540 + (d_idx // 5 * 60)
                 box = pygame.Rect(gx, gy, 150, 50)
                 pygame.draw.rect(screen, PANEL_COLOR, box, border_radius=4)
                 pygame.draw.rect(screen, BORDER_COLOR, box, 1, border_radius=4)
-                screen.blit(FONT_BODY.render(
-                    f"🥟 {shp}", True, TEXT_COLOR), (gx + 15, gy + 15))
+                screen.blit(FONT_BODY.render(f"{shp}", True, TEXT_COLOR), (gx + 15, gy + 15))
 
     elif current == "Fry Station":
         screen.blit(FONT_SUBTITLE.render(
@@ -432,8 +405,7 @@ def draw_game_screen():
 
             f_box = pygame.Rect(fx, fy, 410, 185)
             pygame.draw.rect(screen, BG_COLOR, f_box, border_radius=8)
-            pygame.draw.rect(screen, BORDER_COLOR, f_box,
-                             width=1, border_radius=8)
+            pygame.draw.rect(screen, BORDER_COLOR, f_box, width=1, border_radius=8)
 
             items = game_state["fryers"][f_id]
             screen.blit(FONT_SUBTITLE.render(
@@ -447,33 +419,26 @@ def draw_game_screen():
                 if idx < len(items):
                     churro = items[idx]
                     if churro["status"] == "Frying Side 1":
-                        pygame.draw.rect(screen, PANEL_COLOR,
-                                         s_rect, border_radius=6)
-                        pygame.draw.rect(screen, BORDER_COLOR,
-                                         s_rect, width=1, border_radius=6)
-                        lbl_txt = f"⏳ {churro['shape']}: Side 1 ({max(0.0, churro['time_left']):.1f}s)"
+                        pygame.draw.rect(screen, PANEL_COLOR, s_rect, border_radius=6)
+                        pygame.draw.rect(screen, BORDER_COLOR, s_rect, width=1, border_radius=6)
+                        lbl_txt = f"{churro['shape']}: Side 1 ({max(0.0, churro['time_left']):.1f}s)"
                         lbl_color = TEXT_COLOR
                     elif churro["status"] == "Ready to Flip":
-                        pygame.draw.rect(screen, ACCENT_COLOR,
-                                         s_rect, border_radius=6)
-                        lbl_txt = f"🔄 FLIP {churro['shape'].upper()} (Burns in {max(0.0, churro['time_left']):.1f}s)"
+                        pygame.draw.rect(screen, ACCENT_COLOR, s_rect, border_radius=6)
+                        lbl_txt = f"FLIP {churro['shape'].upper()} (Burns in {max(0.0, churro['time_left']):.1f}s)"
                         lbl_color = PANEL_COLOR
                     elif churro["status"] == "Frying Side 2":
-                        pygame.draw.rect(screen, PANEL_COLOR,
-                                         s_rect, border_radius=6)
-                        pygame.draw.rect(screen, BORDER_COLOR,
-                                         s_rect, width=1, border_radius=6)
-                        lbl_txt = f"⏳ {churro['shape']}: Side 2 ({max(0.0, churro['time_left']):.1f}s)"
+                        pygame.draw.rect(screen, PANEL_COLOR, s_rect, border_radius=6)
+                        pygame.draw.rect(screen, BORDER_COLOR, s_rect, width=1, border_radius=6)
+                        lbl_txt = f"{churro['shape']}: Side 2 ({max(0.0, churro['time_left']):.1f}s)"
                         lbl_color = TEXT_COLOR
                     elif churro["status"] == "Ready to Collect":
-                        pygame.draw.rect(screen, GREEN_BUTTON,
-                                         s_rect, border_radius=6)
-                        lbl_txt = f"📥 COLLECT {churro['shape'].upper()} (Burns in {max(0.0, churro['time_left']):.1f}s)"
+                        pygame.draw.rect(screen, GREEN_BUTTON, s_rect, border_radius=6)
+                        lbl_txt = f"COLLECT {churro['shape'].upper()} (Burns in {max(0.0, churro['time_left']):.1f}s)"
                         lbl_color = PANEL_COLOR
                     elif churro["status"] == "Burnt":
-                        pygame.draw.rect(screen, RED_BUTTON,
-                                         s_rect, border_radius=6)
-                        lbl_txt = f"🗑️ TRASH BURNT {churro['shape'].upper()}"
+                        pygame.draw.rect(screen, RED_BUTTON, s_rect, border_radius=6)
+                        lbl_txt = f"TRASH BURNT {churro['shape'].upper()}"
                         lbl_color = PANEL_COLOR
 
                     surf = FONT_BODY.render(lbl_txt, True, lbl_color)
@@ -481,15 +446,12 @@ def draw_game_screen():
                                 (s_rect.height // 2 - surf.get_height() // 2)))
                 else:
                     if idx == len(items) and game_state["prepared_dough_queue"]:
-                        pygame.draw.rect(screen, BLUE_BUTTON,
-                                         s_rect, border_radius=6)
-                        lbl_txt = f"➕ Drop {game_state['prepared_dough_queue'][0]}"
+                        pygame.draw.rect(screen, BLUE_BUTTON, s_rect, border_radius=6)
+                        lbl_txt = f"Drop {game_state['prepared_dough_queue'][0]}"
                         lbl_color = PANEL_COLOR
                     else:
-                        pygame.draw.rect(screen, PANEL_COLOR,
-                                         s_rect, border_radius=6)
-                        pygame.draw.rect(screen, BORDER_COLOR,
-                                         s_rect, width=1, border_radius=6)
+                        pygame.draw.rect(screen, PANEL_COLOR, s_rect, border_radius=6)
+                        pygame.draw.rect(screen, BORDER_COLOR, s_rect, width=1, border_radius=6)
                         lbl_txt = "[ Empty Slot ]"
                         lbl_color = BORDER_COLOR
 
@@ -498,45 +460,36 @@ def draw_game_screen():
                                 s_rect.y + (s_rect.height // 2 - surf.get_height() // 2)))
 
     elif current == "Topping Station":
-        screen.blit(FONT_SUBTITLE.render(
-            "1. Apply Sauce Options", True, TEXT_COLOR), (290, 310))
+        screen.blit(FONT_SUBTITLE.render("1. Apply Sauce Options", True, TEXT_COLOR), (290, 310))
         sauces = ["None", "Chocolate", "Caramel", "Condensed Milk"]
         for idx, s in enumerate(sauces):
             btn_s = pygame.Rect(290, 350 + (idx * 55), 240, 48)
             is_sel = (game_state["active_plate"]["sauce"] == s)
 
-            pygame.draw.rect(
-                screen, ACCENT_COLOR if is_sel else PANEL_COLOR, btn_s, border_radius=6)
-            pygame.draw.rect(
-                screen, ACCENT_COLOR if is_sel else BORDER_COLOR, btn_s, width=2, border_radius=6)
+            pygame.draw.rect(screen, ACCENT_COLOR if is_sel else PANEL_COLOR, btn_s, border_radius=6)
+            pygame.draw.rect(screen, ACCENT_COLOR if is_sel else BORDER_COLOR, btn_s, width=2, border_radius=6)
 
-            lbl_s = FONT_BODY.render(
-                s, True, PANEL_COLOR if is_sel else TEXT_COLOR)
+            lbl_s = FONT_BODY.render(s, True, PANEL_COLOR if is_sel else TEXT_COLOR)
             screen.blit(lbl_s, (btn_s.x + 20, btn_s.y +
                         (btn_s.height // 2 - lbl_s.get_height() // 2)))
 
-        screen.blit(FONT_SUBTITLE.render(
-            "2. Shake Topping Options", True, TEXT_COLOR), (570, 310))
+        screen.blit(FONT_SUBTITLE.render("2. Shake Topping Options", True, TEXT_COLOR), (570, 310))
         toppings = ["None", "Cinnamon Sugar", "Sprinkles", "Crushed Oreos"]
         for idx, t in enumerate(toppings):
             btn_t = pygame.Rect(570, 350 + (idx * 55), 240, 48)
             is_sel = (game_state["active_plate"]["topping"] == t)
 
-            pygame.draw.rect(
-                screen, BLUE_BUTTON if is_sel else PANEL_COLOR, btn_t, border_radius=6)
-            pygame.draw.rect(
-                screen, BLUE_BUTTON if is_sel else BORDER_COLOR, btn_t, width=2, border_radius=6)
+            pygame.draw.rect(screen, BLUE_BUTTON if is_sel else PANEL_COLOR, btn_t, border_radius=6)
+            pygame.draw.rect(screen, BLUE_BUTTON if is_sel else BORDER_COLOR, btn_t, width=2, border_radius=6)
 
-            lbl_t = FONT_BODY.render(
-                t, True, PANEL_COLOR if is_sel else TEXT_COLOR)
+            lbl_t = FONT_BODY.render(t, True, PANEL_COLOR if is_sel else TEXT_COLOR)
             screen.blit(lbl_t, (btn_t.x + 20, btn_t.y +
                         (btn_t.height // 2 - lbl_t.get_height() // 2)))
 
         # Column 3: Active Prep Workbench Area
         p_box = pygame.Rect(850, 310, 310, 320)
         pygame.draw.rect(screen, BG_COLOR, p_box, border_radius=6)
-        screen.blit(FONT_SUBTITLE.render(
-            "3. Workbench", True, TEXT_COLOR), (870, 325))
+        screen.blit(FONT_SUBTITLE.render("3. Workbench", True, TEXT_COLOR), (870, 325))
 
         workbench_lines = [
             f"Sauce: {game_state['active_plate']['sauce']}",
@@ -549,9 +502,9 @@ def draw_game_screen():
             for item in game_state["active_plate"]["churros"]:
                 counts[item] = counts.get(item, 0) + 1
             for shape_name, qty in counts.items():
-                workbench_lines.append(f"  • {qty}x {shape_name}")
+                workbench_lines.append(f"  * {qty}x {shape_name}")
         else:
-            workbench_lines.append("  • (Plate is empty)")
+            workbench_lines.append("  * (Plate is empty)")
 
         ly = 365
         for line in workbench_lines:
@@ -561,8 +514,7 @@ def draw_game_screen():
         btn_undo = pygame.Rect(870, 520, 270, 35)
         if game_state["active_plate"]["churros"] and not game_state["active_plate"]["is_locked"]:
             pygame.draw.rect(screen, RED_BUTTON, btn_undo, border_radius=8)
-            lbl_undo = FONT_BODY.render(
-                "↩️ Remove Last Churro", True, PANEL_COLOR)
+            lbl_undo = FONT_BODY.render("Remove Last Churro", True, PANEL_COLOR)
             screen.blit(lbl_undo, (btn_undo.x + (btn_undo.width //
                         2 - lbl_undo.get_width() // 2), btn_undo.y + 8))
 
@@ -570,11 +522,10 @@ def draw_game_screen():
         has_items = len(game_state["active_plate"]["churros"]) > 0
         is_locked = game_state["active_plate"]["is_locked"]
 
-        btn_color = BORDER_COLOR if not has_items else (
-            ACCENT_COLOR if is_locked else GREEN_BUTTON)
+        btn_color = BORDER_COLOR if not has_items else (ACCENT_COLOR if is_locked else GREEN_BUTTON)
         pygame.draw.rect(screen, btn_color, btn_build, border_radius=8)
 
-        status_lbl = "Locked & Ready" if is_locked else "✨ Coat & Lock Plate"
+        status_lbl = "Locked & Ready" if is_locked else "Coat & Lock Plate"
         lbl_b = FONT_SUBTITLE.render(status_lbl, True, PANEL_COLOR)
         screen.blit(lbl_b, (btn_build.x + (btn_build.width // 2 -
                     lbl_b.get_width() // 2), btn_build.y + 14))
@@ -592,10 +543,9 @@ def draw_game_screen():
             for p_idx, plate in enumerate(game_state["finished_plates"][:6]):
                 p_rect = pygame.Rect(310 + (p_idx * 140), 700, 120, 45)
                 pygame.draw.rect(screen, PANEL_COLOR, p_rect, border_radius=4)
-                pygame.draw.rect(screen, BORDER_COLOR,
-                                 p_rect, 1, border_radius=4)
+                pygame.draw.rect(screen, BORDER_COLOR, p_rect, 1, border_radius=4)
                 screen.blit(FONT_BODY.render(
-                    f"🥟 {plate['shape']}", True, TEXT_COLOR), (p_rect.x + 15, p_rect.y + 14))
+                    f"{plate['shape']}", True, TEXT_COLOR), (p_rect.x + 15, p_rect.y + 14))
 
     elif current == "Pay Counter":
         screen.blit(FONT_SUBTITLE.render(
@@ -603,8 +553,7 @@ def draw_game_screen():
 
         invoice_card = pygame.Rect(290, 350, 860, 260)
         pygame.draw.rect(screen, BG_COLOR, invoice_card, border_radius=8)
-        pygame.draw.rect(screen, BORDER_COLOR,
-                         invoice_card, 1, border_radius=8)
+        pygame.draw.rect(screen, BORDER_COLOR, invoice_card, 1, border_radius=8)
 
         if not game_state["tickets"]:
             screen.blit(FONT_SUBTITLE.render(
@@ -616,8 +565,7 @@ def draw_game_screen():
             screen.blit(FONT_SUBTITLE.render(
                 f"Serving Customer: {active_ticket['customer']}", True, ACCENT_COLOR), (320, 370))
             spec_txt = f"Target Recipe: {active_ticket['qty']}x {active_ticket['shape']} with [{active_ticket['sauce']}] + [{active_ticket['topping']}]"
-            screen.blit(FONT_BODY.render(
-                spec_txt, True, TEXT_COLOR), (320, 415))
+            screen.blit(FONT_BODY.render(spec_txt, True, TEXT_COLOR), (320, 415))
 
             churros_on_plate = plate["churros"]
             match_qty = (len(churros_on_plate) == active_ticket["qty"])
@@ -627,12 +575,12 @@ def draw_game_screen():
             match_top = (plate["topping"] == active_ticket["topping"])
 
             q_verif = f"Quantity: {len(churros_on_plate)} / {active_ticket['qty']} " + (
-                "✅" if match_qty else "❌")
-            sh_verif = f"Shape Type Match: " + ("✅" if match_shape else "❌")
+                "OK" if match_qty else "X")
+            sh_verif = "Shape Type Match: " + ("OK" if match_shape else "X")
             s_verif = f"Sauce Coating: {plate['sauce']} " + (
-                "✅" if match_sauce else f"❌ (Expected {active_ticket['sauce']})")
+                "OK" if match_sauce else f"X (Expected {active_ticket['sauce']})")
             t_verif = f"Topping Shaker: {plate['topping']} " + (
-                "✅" if match_top else f"❌ (Expected {active_ticket['topping']})")
+                "OK" if match_top else f"X (Expected {active_ticket['topping']})")
 
             screen.blit(FONT_BODY.render(q_verif, True,
                         GREEN_BUTTON if match_qty else RED_BUTTON), (320, 460))
@@ -640,29 +588,24 @@ def draw_game_screen():
                 sh_verif, True, GREEN_BUTTON if match_shape else RED_BUTTON), (320, 488))
             screen.blit(FONT_BODY.render(
                 s_verif, True, GREEN_BUTTON if match_sauce else RED_BUTTON), (320, 516))
-            screen.blit(FONT_BODY.render(t_verif, True,
-                        GREEN_BUTTON if match_top else RED_BUTTON), (320, 544))
+            screen.blit(FONT_BODY.render(
+                t_verif, True, GREEN_BUTTON if match_top else RED_BUTTON), (320, 544))
 
             btn_pay = pygame.Rect(290, 640, 860, 70)
             pygame.draw.rect(
                 screen, GREEN_BUTTON if plate["is_locked"] else BORDER_COLOR, btn_pay, border_radius=10)
-            lbl_p = FONT_TITLE.render(
-                "💰 SERVE PLATE & COLLECT PAYMENT", True, PANEL_COLOR)
+            lbl_p = FONT_TITLE.render("SERVE PLATE & COLLECT PAYMENT", True, PANEL_COLOR)
             screen.blit(lbl_p, (btn_pay.x + (btn_pay.width // 2 -
                         lbl_p.get_width() // 2), btn_pay.y + 15))
+
     # --- WARNING TOAST OVERLAY ---
     if game_state["warning_timer"] > 0:
-        warn_surf = FONT_SUBTITLE.render(
-            game_state["warning_message"], True, PANEL_COLOR)
+        warn_surf = FONT_SUBTITLE.render(game_state["warning_message"], True, PANEL_COLOR)
         warn_bg = pygame.Rect(WIDTH // 2 - warn_surf.get_width() //
-                              2 - 20, 740, warn_surf.get_width() + 40, 40)
+                              2 - 20, 720, warn_surf.get_width() + 40, 44)
         pygame.draw.rect(screen, RED_BUTTON, warn_bg, border_radius=8)
-        screen.blit(warn_surf, (warn_bg.x + 20, warn_bg.y + 8))
+        screen.blit(warn_surf, (warn_bg.x + 20, warn_bg.y + 10))
 
-
-def show_warning(message):
-    game_state["warning_message"] = message
-    game_state["warning_timer"] = 2.0
 
 # --- INTERACTIVE CLICK REACTION HANDLER HUB ---
 
@@ -731,22 +674,18 @@ def handle_gameplay_clicks(mx, my):
                     churro = items[0]
                     if churro["status"] == "Ready to Flip":
                         churro["status"] = "Frying Side 2"
-                        # CHANGED: Frying Side 2 time changed from 8.0s to 25.0s
                         churro["time_left"] = 25.0
                     elif churro["status"] == "Ready to Collect":
                         if len(game_state["finished_plates"]) >= 6:
                             show_warning("Bench is full!")
                         else:
-                            game_state["finished_plates"].append(
-                                {"shape": churro["shape"]})
+                            game_state["finished_plates"].append({"shape": churro["shape"]})
                             items.pop(0)
                     elif churro["status"] == "Burnt":
                         items.pop(0)
                 elif len(items) == 0 and game_state["prepared_dough_queue"]:
                     next_dough = game_state["prepared_dough_queue"].pop(0)
-                    # CHANGED: Frying Side 1 time changed from 10.0s to 25.0s
-                    items.append({"status": "Frying Side 1",
-                                 "shape": next_dough, "time_left": 25.0})
+                    items.append({"status": "Frying Side 1", "shape": next_dough, "time_left": 25.0})
                 return
 
             if s2_rect.collidepoint((mx, my)):
@@ -754,22 +693,18 @@ def handle_gameplay_clicks(mx, my):
                     churro = items[1]
                     if churro["status"] == "Ready to Flip":
                         churro["status"] = "Frying Side 2"
-                        # CHANGED: Frying Side 2 time changed from 8.0s to 25.0s
                         churro["time_left"] = 25.0
                     elif churro["status"] == "Ready to Collect":
                         if len(game_state["finished_plates"]) >= 6:
                             show_warning("Bench is full!")
                         else:
-                            game_state["finished_plates"].append(
-                                {"shape": churro["shape"]})
+                            game_state["finished_plates"].append({"shape": churro["shape"]})
                             items.pop(1)
                     elif churro["status"] == "Burnt":
                         items.pop(1)
                 elif len(items) == 1 and game_state["prepared_dough_queue"]:
                     next_dough = game_state["prepared_dough_queue"].pop(0)
-                    # CHANGED: Frying Side 1 time changed from 10.0s to 25.0s
-                    items.append({"status": "Frying Side 1",
-                                 "shape": next_dough, "time_left": 25.0})
+                    items.append({"status": "Frying Side 1", "shape": next_dough, "time_left": 25.0})
                 return
 
     elif current == "Topping Station":
@@ -795,8 +730,7 @@ def handle_gameplay_clicks(mx, my):
                         show_warning("No space left!")
                         return
                     else:
-                        game_state["active_plate"]["churros"].append(
-                            plate["shape"])
+                        game_state["active_plate"]["churros"].append(plate["shape"])
                         game_state["finished_plates"].pop(p_idx)
                         return
 
@@ -825,6 +759,7 @@ def handle_gameplay_clicks(mx, my):
                 }
                 return
 
+
 # --- MAIN EXECUTION GAME LOOP ---
 
 
@@ -852,14 +787,12 @@ def main():
                                     if load_game():
                                         game_state["screen_state"] = "GAME"
                                 elif btn_continue.collidepoint((mx, my)) and len(input_name_buffer.strip()) > 0:
-                                    game_state["character_name"] = input_name_buffer.strip(
-                                    )
+                                    game_state["character_name"] = input_name_buffer.strip()
                                     game_state["intro_stage"] = "SPIEL"
                             else:
                                 btn_continue = pygame.Rect(500, 520, 200, 50)
                                 if btn_continue.collidepoint((mx, my)) and len(input_name_buffer.strip()) > 0:
-                                    game_state["character_name"] = input_name_buffer.strip(
-                                    )
+                                    game_state["character_name"] = input_name_buffer.strip()
                                     game_state["intro_stage"] = "SPIEL"
                         elif game_state["intro_stage"] == "SPIEL":
                             btn_start = pygame.Rect(450, 580, 300, 60)

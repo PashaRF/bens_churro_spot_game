@@ -1,16 +1,16 @@
 {
-    "character_name": "ben",
-    "money": 0.0,
+    "character_name": "Ben",
+    "money": 12.5,
     "tickets": [],
-    "waiting_customers": [],
+    "waiting_customers": [
+        {
+            "name": "Wally 2"
+        },
+        {
+            "name": "Cooper"
+        }
+    ],
     "prepared_dough_queue": [
-        "Straight",
-        "Straight",
-        "Straight",
-        "Straight",
-        "Straight",
-        "Straight",
-        "Straight",
         "Straight",
         "Straight",
         "Straight",
@@ -20,7 +20,14 @@
         "Straight",
         "Straight"
     ],
-    "finished_plates": [],
+    "finished_plates": [
+        {
+            "shape": "Straight"
+        },
+        {
+            "shape": "Straight"
+        }
+    ],
     "active_plate": {
         "churros": [],
         "sauce": "None",
