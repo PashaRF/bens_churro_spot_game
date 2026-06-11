@@ -1,27 +1,33 @@
 {
-    "character_name": "pasha",
-    "money": 0.0,
-    "tickets": [
+    "character_name": "Ben",
+    "money": 12.5,
+    "tickets": [],
+    "waiting_customers": [
         {
-            "id": 1,
-            "customer": "Papa Louie",
-            "shape": "Straight",
-            "qty": 4,
-            "sauce": "Chocolate",
-            "topping": "Crushed Oreos"
+            "name": "Wally 2"
         },
         {
-            "id": 2,
-            "customer": "Wally",
-            "shape": "Loop",
-            "qty": 3,
-            "sauce": "Chocolate",
-            "topping": "Cinnamon Sugar"
+            "name": "Cooper"
         }
     ],
-    "waiting_customers": [],
-    "prepared_dough_queue": [],
-    "finished_plates": [],
+    "prepared_dough_queue": [
+        "Straight",
+        "Straight",
+        "Straight",
+        "Straight",
+        "Straight",
+        "Straight",
+        "Straight",
+        "Straight"
+    ],
+    "finished_plates": [
+        {
+            "shape": "Straight"
+        },
+        {
+            "shape": "Straight"
+        }
+    ],
     "active_plate": {
         "churros": [],
         "sauce": "None",
@@ -29,48 +35,9 @@
         "is_locked": false
     },
     "fryers": {
-        "1": [
-            {
-                "status": "Frying Side 2",
-                "shape": "Straight",
-                "time_left": 12.183333333333655
-            },
-            {
-                "status": "Frying Side 2",
-                "shape": "Straight",
-                "time_left": 12.55000000000034
-            }
-        ],
-        "2": [
-            {
-                "status": "Frying Side 2",
-                "shape": "Straight",
-                "time_left": 13.433333333333717
-            },
-            {
-                "status": "Frying Side 2",
-                "shape": "Straight",
-                "time_left": 13.916666666667075
-            }
-        ],
-        "3": [
-            {
-                "status": "Frying Side 1",
-                "shape": "Loop",
-                "time_left": 17.983333333333732
-            },
-            {
-                "status": "Frying Side 1",
-                "shape": "Loop",
-                "time_left": 18.333333333333712
-            }
-        ],
-        "4": [
-            {
-                "status": "Frying Side 1",
-                "shape": "Loop",
-                "time_left": 18.816666666667018
-            }
-        ]
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
     }
 }
