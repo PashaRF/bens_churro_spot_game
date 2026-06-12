@@ -257,7 +257,7 @@ def draw_game_screen():
     screen.blit(chef_surf, (40, 35))
 
     money_surf = FONT_SUBTITLE.render(f"Earnings: ${game_state['money']:.2f}", True, GREEN_BUTTON)
-    screen.blit(money_surf, (300, 35))
+    screen.blit(money_surf, (520, 35))
 
     btn_save_quit = pygame.Rect(WIDTH - 180, 25, 140, 40)
     pygame.draw.rect(screen, RED_BUTTON, btn_save_quit, border_radius=6)
@@ -809,7 +809,7 @@ def main():
                     elif event.key == pygame.K_BACKSPACE:
                         input_name_buffer = input_name_buffer[:-1]
                     else:
-                        if len(input_name_buffer) < 35 or event.unicode == ' ':
+                        if len(input_name_buffer) < 30 or event.unicode == ' ':
                             input_name_buffer += event.unicode
 
         # Engine Physics Tick Simulation Matrix Updates

@@ -1,102 +1,10 @@
 {
-    "character_name": "P Diddy",
-    "money": 62.5,
-    "tickets": [
-        {
-            "id": 3,
-            "customer": "Marty",
-            "shape": "Loop",
-            "qty": 3,
-            "sauce": "Caramel",
-            "topping": "Sprinkles"
-        },
-        {
-            "id": 4,
-            "customer": "Rita",
-            "shape": "Straight",
-            "qty": 4,
-            "sauce": "Caramel",
-            "topping": "Cinnamon Sugar"
-        },
-        {
-            "id": 5,
-            "customer": "Papa Louie",
-            "shape": "Straight",
-            "qty": 4,
-            "sauce": "Chocolate",
-            "topping": "Cinnamon Sugar"
-        },
-        {
-            "id": 4,
-            "customer": "Prudence",
-            "shape": "Straight",
-            "qty": 3,
-            "sauce": "Chocolate",
-            "topping": "Cinnamon Sugar"
-        },
-        {
-            "id": 5,
-            "customer": "Papa Louie 2",
-            "shape": "Straight",
-            "qty": 2,
-            "sauce": "Condensed Milk",
-            "topping": "Cinnamon Sugar"
-        },
-        {
-            "id": 6,
-            "customer": "Marty 2",
-            "shape": "Spiral",
-            "qty": 4,
-            "sauce": "Chocolate",
-            "topping": "Crushed Oreos"
-        },
-        {
-            "id": 7,
-            "customer": "Prudence 2",
-            "shape": "Spiral",
-            "qty": 2,
-            "sauce": "Caramel",
-            "topping": "Sprinkles"
-        },
-        {
-            "id": 8,
-            "customer": "Wally",
-            "shape": "Loop",
-            "qty": 4,
-            "sauce": "Chocolate",
-            "topping": "Sprinkles"
-        }
-    ],
-    "waiting_customers": [
-        {
-            "name": "Cooper"
-        }
-    ],
-    "prepared_dough_queue": [
-        "Straight",
-        "Straight",
-        "Straight",
-        "Straight",
-        "Straight",
-        "Straight",
-        "Straight",
-        "Loop",
-        "Loop",
-        "Loop",
-        "Spiral",
-        "Spiral",
-        "Loop",
-        "Loop",
-        "Straight"
-    ],
-    "finished_plates": [
-        {
-            "shape": "Loop"
-        },
-        {
-            "shape": "Straight"
-        }
-    ],
+    "character_name": "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMM",
+    "money": 0.0,
+    "tickets": [],
+    "waiting_customers": [],
+    "prepared_dough_queue": [],
+    "finished_plates": [],
     "active_plate": {
         "churros": [],
         "sauce": "None",
@@ -104,53 +12,9 @@
         "is_locked": false
     },
     "fryers": {
-        "1": [
-            {
-                "status": "Burnt",
-                "shape": "Straight",
-                "time_left": -0.016666666666650353
-            },
-            {
-                "status": "Burnt",
-                "shape": "Straight",
-                "time_left": -0.016666666666650353
-            }
-        ],
-        "2": [
-            {
-                "status": "Burnt",
-                "shape": "Straight",
-                "time_left": -0.016666666666650353
-            },
-            {
-                "status": "Burnt",
-                "shape": "Straight",
-                "time_left": -0.016666666666650353
-            }
-        ],
-        "3": [
-            {
-                "status": "Burnt",
-                "shape": "Straight",
-                "time_left": -0.016666666666650353
-            },
-            {
-                "status": "Burnt",
-                "shape": "Straight",
-                "time_left": -0.016666666666650353
-            }
-        ],
-        "4": [
-            {
-                "status": "Burnt",
-                "shape": "Straight",
-                "time_left": -0.016666666666650353
-            },
-            {
-                "status": "Burnt",
-                "shape": "Straight",
-                "time_left": -0.016666666666650353
-            }
-        ]
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
     }
 }
