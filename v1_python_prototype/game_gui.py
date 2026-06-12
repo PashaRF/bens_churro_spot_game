@@ -809,7 +809,7 @@ def main():
                     elif event.key == pygame.K_BACKSPACE:
                         input_name_buffer = input_name_buffer[:-1]
                     else:
-                        if len(input_name_buffer) < 15 and (event.unicode.isalnum() or event.unicode == ' '):
+                        if len(input_name_buffer) < 35 or event.unicode == ' ':
                             input_name_buffer += event.unicode
 
         # Engine Physics Tick Simulation Matrix Updates
