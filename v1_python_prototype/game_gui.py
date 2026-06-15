@@ -250,10 +250,10 @@ def draw_game_screen():
 
     # Shifted safely left to avoid timer/quit collisions
     money_surf = FONT_SUBTITLE.render(f"Earnings: ${game_state['money']:.2f}", True, GREEN_BUTTON)
-    screen.blit(money_surf, (360, 35))
+    screen.blit(money_surf, (530, 35))
 
     orders_surf = FONT_SUBTITLE.render(f"Orders: {game_state['completed_orders']}/10", True, BLUE_BUTTON)
-    screen.blit(orders_surf, (600, 35))
+    screen.blit(orders_surf, (720, 35))
 
     btn_save_quit = pygame.Rect(WIDTH - 180, 25, 140, 40)
     pygame.draw.rect(screen, RED_BUTTON, btn_save_quit, border_radius=6)

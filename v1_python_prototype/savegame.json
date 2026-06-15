@@ -1,6 +1,7 @@
 {
     "character_name": "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMM",
-    "money": 1.2978978746576876e+22,
+    "money": 0.0,
+    "completed_orders": 0,
     "tickets": [],
     "waiting_customers": [],
     "prepared_dough_queue": [],
