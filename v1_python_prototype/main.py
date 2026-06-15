@@ -151,7 +151,7 @@ def customer_timer():
             "name": arrival_name,
             "order": "Pending Order details..."
         }
-        
+
         # --- THE FIX: Put them in the waiting line, NOT the ticket rail ---
         game_state["waiting_at_door"].append(new_arrival)
 
