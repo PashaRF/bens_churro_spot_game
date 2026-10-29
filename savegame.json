@@ -1,15 +1,70 @@
 {
-    "character_name": "Ben",
-    "money": 0.0,
-    "completed_orders": 0,
-    "tickets": [],
-    "waiting_customers": [
+    "character_name": "Bram",
+    "money": 16.985413193702698,
+    "completed_orders": 1,
+    "tickets": [
         {
-            "name": "Marty"
+            "id": 1,
+            "customer": "Prudence",
+            "shape": "Spiral",
+            "qty": 4,
+            "sauce": "Caramel",
+            "topping": "Sprinkles",
+            "created_time": 1793301901.4611268
+        },
+        {
+            "id": 2,
+            "customer": "Marty 2",
+            "shape": "Loop",
+            "qty": 2,
+            "sauce": "Condensed Milk",
+            "topping": "Cinnamon Sugar",
+            "created_time": 1793301901.784468
+        },
+        {
+            "id": 3,
+            "customer": "Papa Louie",
+            "shape": "Straight",
+            "qty": 2,
+            "sauce": "Caramel",
+            "topping": "Cinnamon Sugar",
+            "created_time": 1793301902.0900512
+        },
+        {
+            "id": 4,
+            "customer": "Wally",
+            "shape": "Straight",
+            "qty": 4,
+            "sauce": "Chocolate",
+            "topping": "Sprinkles",
+            "created_time": 1793301902.3793678
         }
     ],
-    "prepared_dough_queue": [],
-    "finished_plates": [],
+    "waiting_customers": [
+        {
+            "name": "Big Pauly"
+        },
+        {
+            "name": "Penny"
+        }
+    ],
+    "prepared_dough_queue": [
+        "Spiral",
+        "Spiral",
+        "Spiral",
+        "Spiral"
+    ],
+    "finished_plates": [
+        {
+            "shape": "Straight"
+        },
+        {
+            "shape": "Straight"
+        },
+        {
+            "shape": "Straight"
+        }
+    ],
     "active_plate": {
         "churros": [],
         "sauce": "None",
@@ -17,9 +72,53 @@
         "is_locked": false
     },
     "fryers": {
-        "1": [],
-        "2": [],
-        "3": [],
-        "4": []
+        "1": [
+            {
+                "status": "Frying Side 2",
+                "shape": "Straight",
+                "time_left": 4.966666666666791
+            },
+            {
+                "status": "Frying Side 2",
+                "shape": "Straight",
+                "time_left": 5.750000000000122
+            }
+        ],
+        "2": [
+            {
+                "status": "Frying Side 2",
+                "shape": "Straight",
+                "time_left": 6.433333333333453
+            },
+            {
+                "status": "Frying Side 2",
+                "shape": "Straight",
+                "time_left": 6.916666666666784
+            }
+        ],
+        "3": [
+            {
+                "status": "Frying Side 2",
+                "shape": "Straight",
+                "time_left": 7.633333333333448
+            },
+            {
+                "status": "Frying Side 2",
+                "shape": "Straight",
+                "time_left": 8.016666666666781
+            }
+        ],
+        "4": [
+            {
+                "status": "Frying Side 2",
+                "shape": "Loop",
+                "time_left": 8.483333333333471
+            },
+            {
+                "status": "Frying Side 2",
+                "shape": "Loop",
+                "time_left": 9.000000000000163
+            }
+        ]
     }
 }

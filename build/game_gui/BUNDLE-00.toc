@@ -1,0 +1,3 @@
+([('game_gui',
+   '/Users/ben/bens_churro_spot_game/dist/game_gui',
+   'EXECUTABLE')],)
